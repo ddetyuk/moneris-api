@@ -49,7 +49,7 @@ class VaultTest extends TestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp (): void
     {
         parent::setUp();
 
@@ -164,7 +164,7 @@ class VaultTest extends TestCase
 
         $this->card->expiry = '2112';
 
-        $response = $this->vault->update($key, $this->card);
+        $response = $this->vault->update($this->card, $key);
         $receipt = $response->receipt();
 
         $this->assertTrue($response->successful);
@@ -190,7 +190,7 @@ class VaultTest extends TestCase
 
         $this->card->customer->email = 'example2@email.com';
 
-        $response = $this->vault->update($key, $this->card);
+        $response = $this->vault->update($this->card, $key);
         $receipt = $response->receipt();
 
         $this->assertTrue($response->successful);

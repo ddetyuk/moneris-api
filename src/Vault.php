@@ -192,14 +192,12 @@ class Vault extends Gateway
 
     /**
      * Update an existing credit card in the Vault.
-     *
-     * @param string $key
-     * @param \CraigPaul\Moneris\CreditCard $card
-     * @param array $extra_params
-     *
-     * @return \CraigPaul\Moneris\Response
      */
-    public function update($key = '', CreditCard $card, $extra_params = [])
+    public function update (
+        CreditCard $card,
+        string $key = '',
+        array $extra_params = []
+    ): Response
     {
         $params = array_merge($extra_params, [
             'type' => 'res_update_cc',

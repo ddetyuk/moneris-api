@@ -2,7 +2,7 @@
 
 use CraigPaul\Moneris\Moneris;
 
-class TestCase extends PHPUnit_Framework_TestCase
+class TestCase extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var string
@@ -34,12 +34,7 @@ class TestCase extends PHPUnit_Framework_TestCase
      */
     protected $visa;
 
-    /**
-     * Set up the test environment.
-     *
-     * @return void
-     */
-    public function setUp()
+    public function setUp (): void
     {
         parent::setUp();
 
