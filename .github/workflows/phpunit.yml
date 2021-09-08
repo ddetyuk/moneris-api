@@ -8,7 +8,7 @@ jobs:
     runs-on: ${{ matrix.operating-system }}
     strategy:
       matrix:
-        operating-system: [ubunutu-latest, windows-latest, macos-latest]
+        operating-system: [ubuntu-latest, windows-latest, macos-latest]
         php-versions: ['8.0']
     steps:
       - name: Checkout
@@ -29,4 +29,4 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --no-progress --prefer-dist --optimize-autoloader
       - name: Test with phpunit
-        run: vendor/bin/phpunit --coverage-text
+        run: vendor/bin/phpunit --coverage-text --configuration phpunit.ci.xml
