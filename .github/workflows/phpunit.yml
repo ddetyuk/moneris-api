@@ -1,6 +1,23 @@
 name: PHPUnit Checks
 
-on: [pull_request]
+on:
+  # Trigger this workflow on pushes to trunk. Since this branch
+  # is protected, this will only run post-merge.
+  push:
+    branches:
+      - trunk
+  # Trigger this workflow on PRs to trunk. We don't want to run
+  # the check on merges into other branches, since that's an
+  # unnecessary bit of overhead.
+  pull_request:
+    branches:
+      - trunk
+  # Trigger this workflow on release creation as well. Releases
+  # are fairly rare, so this should be ok. Remove this in the
+  # future if it proves unnecessary.
+  release:
+    types:
+      - created
 
 jobs:
   phpunit:
