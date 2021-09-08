@@ -1,5 +1,5 @@
 {
-    "name": "craigpaul/moneris-api",
+    "name": "dbt/moneris-api",
     "description": "An easier way to consume the Moneris eCommerce Unified API.",
     "keywords": ["moneris", "api"],
     "license": "MIT",
@@ -7,6 +7,10 @@
         {
             "name": "Craig Paul",
             "email": "craig@townfolio.co"
+        },
+        {
+            "name": "Daniel S. Deboer",
+            "email": "dandb@hey.com"
         }
     ],
     "require": {
