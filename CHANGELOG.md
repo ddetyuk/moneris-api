@@ -1,5 +1,13 @@
 #Moneris API Changelog
 
+### 1.0.0 (2020-05-05)
+####Changed
+- Change `Vault::update(...)` signature to prevent PHP 8 from throwing an parameter order error
+- Require PHP 8
+- Require newer versions of PHPUnit, Mockery, and Faker
+- Update test `setUp` signature to match PHPUnit
+- Update `phpunit.dist.xml` to new schema
+
 ###0.8.1 (2020-05-05)
 
 ####Changed

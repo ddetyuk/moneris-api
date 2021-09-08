@@ -7,19 +7,19 @@
  
 ## Requirements
 
-PHP 5.6 and later
+PHP 8.0 and up.
 
 ## Composer
 
 To get started, install the package via the Composer package manager:
 
 ```php
-composer require craigpaul/moneris-api
+composer require dbt/moneris-api
 ```
 
 ## Instantiation
 
-Creating a new Moneris instance is quite easy and straightforward.
+Creating a new Moneris instance is quite easy and straightforward:
 
 ```php
 use CraigPaul\Moneris\Moneris;
@@ -337,7 +337,7 @@ $key = $response->receipt()->read('key');
 
 $card->customer->email = 'example2@email.com';
 
-$response = $vault->update($key, $card);
+$response = $vault->update($card, $key);
 ```
 
 ### Tokenize a Previous Transaction
