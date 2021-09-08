@@ -2,7 +2,7 @@
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
-[![Build Status][ico-build]][link-travis]
+[![Build Status][ico-build]][link-action]
 [![Total Downloads][ico-downloads]][link-downloads]
  
 ## Requirements
@@ -547,20 +547,23 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ## Credits
 
-- [Craig Paul][link-author]
+- [Dan Deboer][link-dan]
+- [Craig Paul][link-craig]
 - [All Contributors][link-contributors]
 
 ## License
 
 Moneris API is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
-[ico-version]: https://img.shields.io/packagist/v/dbt/moneris-api.svg?style=flat-square
-[ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
-[ico-build]: https://img.shields.io/github/checks-status/DeBoerTool/moneris-api/trunk.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/dbt/moneris-api.svg?style=flat-square
+[ico-version]: https://img.shields.io/github/v/release/DeBoerTool/moneris-api
+[ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg
+[ico-build]: https://img.shields.io/github/workflow/status/DeBoerTool/moneris-api/PHPUnit%20Checks
+[ico-downloads]: https://img.shields.io/packagist/dt/dbt/moneris-api.svg
 
 [link-packagist]: https://packagist.org/packages/dbt/moneris-api
-[link-travis]: https://travis-ci.org/craigpaul/moneris-api
 [link-downloads]: https://packagist.org/packages/dbt/moneris-api
-[link-author]: https://github.com/danielsdeboer
+[link-action]: https://github.com/DeBoerTool/moneris-api
+
+[link-craig]: https://github.com/craigpaul
+[link-dan]: https://github.com/danielsdeboer
 [link-contributors]: ../../contributors
