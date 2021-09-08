@@ -2,7 +2,7 @@
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
-[![Build Status][ico-travis]][link-travis]
+[![Build Status][ico-build]][link-travis]
 [![Total Downloads][ico-downloads]][link-downloads]
  
 ## Requirements
@@ -554,13 +554,13 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 Moneris API is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
-[ico-version]: https://img.shields.io/packagist/v/craigpaul/moneris-api.svg?style=flat-square
+[ico-version]: https://img.shields.io/packagist/v/dbt/moneris-api.svg?style=flat-square
 [ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
-[ico-travis]: https://img.shields.io/travis/craigpaul/moneris-api/master.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/craigpaul/moneris-api.svg?style=flat-square
+[ico-build]: https://img.shields.io/github/checks-status/DeBoerTool/moneris-api/trunk.svg?style=flat-square
+[ico-downloads]: https://img.shields.io/packagist/dt/dbt/moneris-api.svg?style=flat-square
 
-[link-packagist]: https://packagist.org/packages/craigpaul/moneris-api
+[link-packagist]: https://packagist.org/packages/dbt/moneris-api
 [link-travis]: https://travis-ci.org/craigpaul/moneris-api
-[link-downloads]: https://packagist.org/packages/craigpaul/moneris-api
-[link-author]: https://github.com/craigpaul
+[link-downloads]: https://packagist.org/packages/dbt/moneris-api
+[link-author]: https://github.com/danielsdeboer
 [link-contributors]: ../../contributors
