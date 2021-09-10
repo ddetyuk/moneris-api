@@ -98,7 +98,7 @@ class Gateway implements GatewayInterface
     }
 
     /**
-     * Capture a pre-authorized a transaction.
+     * Capture a pre-authorized transaction.
      *
      * @param \CraigPaul\Moneris\Transaction|string $transaction
      * @param string|null $order

@@ -5,7 +5,7 @@ namespace CraigPaul\Moneris\Interfaces;
 interface GatewayInterface
 {
     /**
-     * Capture a pre-authorized a transaction.
+     * Capture a pre-authorized transaction.
      * @param \CraigPaul\Moneris\Transaction|string $transaction
      * @param string|null $order
      * @param mixed|null $amount
