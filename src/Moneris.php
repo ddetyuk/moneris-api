@@ -2,15 +2,17 @@
 
 namespace CraigPaul\Moneris;
 
+use CraigPaul\Moneris\Interfaces\GatewayInterface;
+use CraigPaul\Moneris\Interfaces\MonerisInterface;
+
 /**
  * CraigPaul\Moneris\Moneris
- *
  * @property-read string $id
  * @property-read string $token
  * @property-read string $environment
  * @property-read string $params
  */
-class Moneris
+class Moneris implements MonerisInterface
 {
     use Gettable;
 
@@ -52,14 +54,12 @@ class Moneris
      * @param string $id
      * @param string $token
      * @param array $params
-     *
-     * @return void
      */
     public function __construct($id = '', $token = '', array $params = [])
     {
         $this->id = $id;
         $this->token = $token;
-        $this->environment = isset($params['environment']) ? $params['environment'] : self::ENV_LIVE;
+        $this->environment = $params['environment'] ?? self::ENV_LIVE;
         $this->params = $params;
     }
 
@@ -72,7 +72,11 @@ class Moneris
      *
      * @return \CraigPaul\Moneris\Gateway
      */
-    public static function create($id = '', $token = '', array $params = [])
+    public static function create (
+        $id = '',
+        $token = '',
+        array $params = []
+    ): GatewayInterface
     {
         $moneris = new static($id, $token, $params);
 
@@ -81,10 +85,8 @@ class Moneris
 
     /**
      * Create and return a new Gateway instance.
-     *
-     * @return \CraigPaul\Moneris\Gateway
      */
-    public function connect()
+    public function connect (): GatewayInterface
     {
         $gateway = new Gateway($this->id, $this->token, $this->environment);
 
