@@ -2,6 +2,7 @@
 
 namespace CraigPaul\Moneris;
 
+use CraigPaul\Moneris\Interfaces\GatewayInterface;
 use GuzzleHttp\Client;
 
 /**
@@ -17,7 +18,7 @@ use GuzzleHttp\Client;
  * @property \CraigPaul\Moneris\Transaction $transaction
  * @property bool $cof
  */
-class Gateway
+class Gateway implements GatewayInterface
 {
     use Gettable, Settable;
 
