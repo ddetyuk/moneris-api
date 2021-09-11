@@ -127,12 +127,8 @@ class Vault extends Gateway
 
     /**
      * Pre-authorize a purchase.
-     *
-     * @param array $params
-     *
-     * @return \CraigPaul\Moneris\Response
      */
-    public function preauth(array $params = [])
+    public function preauth (array $params = []): Response
     {
         $params = array_merge($params, [
             'type' => 'res_preauth_cc',
@@ -146,12 +142,8 @@ class Vault extends Gateway
 
     /**
      * Make a purchase.
-     *
-     * @param array $params
-     *
-     * @return \CraigPaul\Moneris\Response
      */
-    public function purchase(array $params = [])
+    public function purchase (array $params = []): Response
     {
         $params = array_merge($params, [
             'type' => 'res_purchase_cc',

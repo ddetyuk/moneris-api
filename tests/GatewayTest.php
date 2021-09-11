@@ -1,5 +1,6 @@
 <?php
 
+use CraigPaul\Moneris\Interfaces\GatewayInterface;
 use Faker\Factory as Faker;
 use CraigPaul\Moneris\Vault;
 use CraigPaul\Moneris\Gateway;
@@ -10,31 +11,23 @@ class GatewayTest extends TestCase
 {
     /**
      * The billing / shipping info for customer info requests.
-     *
-     * @var array
      */
-    protected $billing;
+    protected array $billing;
 
     /**
      * The customer info for customer info requests.
-     *
-     * @var array
      */
-    protected $customer;
+    protected array $customer;
 
     /**
      * The Moneris gateway.
-     *
-     * @var \CraigPaul\Moneris\Gateway
      */
-    protected $gateway;
+    protected GatewayInterface $gateway;
 
     /**
      * The Moneris API parameters.
-     *
-     * @var array
      */
-    protected $params;
+    protected array $params;
 
     /**
      * Set up the test environment.
@@ -83,7 +76,7 @@ class GatewayTest extends TestCase
     {
         $gateway = new Gateway($this->id, $this->token, $this->environment);
 
-        $this->assertEquals(Gateway::class, get_class($gateway));
+        $this->assertInstanceOf(Gateway::class, $gateway);
         $this->assertObjectHasAttribute('id', $gateway);
         $this->assertObjectHasAttribute('token', $gateway);
         $this->assertObjectHasAttribute('environment', $gateway);

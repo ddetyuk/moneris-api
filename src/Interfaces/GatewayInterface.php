@@ -2,58 +2,55 @@
 
 namespace CraigPaul\Moneris\Interfaces;
 
+use CraigPaul\Moneris\Response;
+use CraigPaul\Moneris\Transaction;
+use CraigPaul\Moneris\Vault;
+
 interface GatewayInterface
 {
     /**
      * Capture a pre-authorized transaction.
-     * @param \CraigPaul\Moneris\Transaction|string $transaction
-     * @param string|null $order
-     * @param mixed|null $amount
-     * @return \CraigPaul\Moneris\Response
      */
-    public function capture ($transaction, $order = null, $amount = null);
+    public function capture (
+        Transaction|string $transaction,
+        string|null $order = null,
+        mixed $amount = null
+    ): Response;
 
     /**
      * Create a new Vault instance.
-     * @return \CraigPaul\Moneris\Vault
      */
-    public function cards ();
+    public function cards (): Vault;
 
     /**
      * Pre-authorize a purchase.
-     * @param array $params
-     * @return \CraigPaul\Moneris\Response
      */
-    public function preauth (array $params = []);
+    public function preauth (array $params = []): Response;
 
     /**
      * Make a purchase.
-     * @param array $params
-     * @return \CraigPaul\Moneris\Response
      */
-    public function purchase (array $params = []);
+    public function purchase (array $params = []): Response;
 
     /**
      * Refund a transaction.
-     * @param \CraigPaul\Moneris\Transaction|string $transaction
-     * @param string|null $order
-     * @param mixed|null $amount
-     * @return \CraigPaul\Moneris\Response
      */
-    public function refund ($transaction, $order = null, $amount = null);
+    public function refund (
+        Transaction|string $transaction,
+        string|null $order = null,
+        mixed $amount = null
+    ): Response;
 
     /**
      * Validate CVD and/or AVS prior to attempting a purchase.
-     * @param array $params
-     * @return \CraigPaul\Moneris\Response
      */
-    public function verify (array $params = []);
+    public function verify (array $params = []): Response;
 
     /**
      * Void a transaction.
-     * @param \CraigPaul\Moneris\Transaction|string $transaction
-     * @param string|null $order
-     * @return \CraigPaul\Moneris\Response
      */
-    public function void ($transaction, $order = null);
+    public function void (
+        Transaction|string $transaction,
+        string|null $order = null
+    ): Response;
 }
