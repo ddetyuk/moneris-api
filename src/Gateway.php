@@ -170,13 +170,11 @@ class Gateway implements GatewayInterface
     /**
      * Get or create a new Transaction instance.
      */
-    protected function transaction (array $params = null): Transaction
+    protected function transaction (array|null $params = null): Transaction
     {
-        if (is_null($this->transaction) || !is_null($params)) {
-            return $this->transaction = new Transaction($this, $params);
-        }
-
-        return $this->transaction;
+        return !$this->transaction || is_array($params)
+            ? $this->transaction = new Transaction($this, $params)
+            : $this->transaction;
     }
 
     /**

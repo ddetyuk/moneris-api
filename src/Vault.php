@@ -14,15 +14,13 @@ class Vault extends Gateway
 
     /**
      * Add a credit card to the Vault.
-     *
      * @param \CraigPaul\Moneris\CreditCard $card
-     * @param array $extra_params
-     *
+     * @param array $extraParams
      * @return \CraigPaul\Moneris\Response
      */
-    public function add(CreditCard $card, $extra_params = [])
+    public function add(CreditCard $card, $extraParams = [])
     {
-        $params = array_merge($extra_params, [
+        $params = array_merge($extraParams, [
             'type' => 'res_add_cc',
             'crypt_type' => $card->crypt,
             'pan' => $card->number,
@@ -173,10 +171,10 @@ class Vault extends Gateway
     public function update (
         CreditCard $card,
         string $key = '',
-        array $extra_params = []
+        array $extraParams = []
     ): Response
     {
-        $params = array_merge($extra_params, [
+        $params = array_merge($extraParams, [
             'type' => 'res_update_cc',
             'data_key' => $key,
             'crypt_type' => $card->crypt,

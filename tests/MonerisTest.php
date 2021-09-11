@@ -4,6 +4,9 @@ use CraigPaul\Moneris\Moneris;
 use CraigPaul\Moneris\Gateway;
 use CraigPaul\Moneris\Vault;
 
+/**
+ * @covers \CraigPaul\Moneris\Moneris
+ */
 class MonerisTest extends TestCase
 {
     /** @test */
@@ -62,6 +65,8 @@ class MonerisTest extends TestCase
 
         $this->expectException(InvalidArgumentException::class);
 
+        /** @noinspection PhpExpressionResultUnusedInspection */
+        /** @noinspection PhpUndefinedFieldInspection */
         $moneris->nonExistentProperty;
     }
 
