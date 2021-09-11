@@ -20,7 +20,7 @@ class ResponseTest extends TestCase
     {
         parent::setUp();
 
-        $this->gateway = $this->gateway([]);
+        $this->gateway = $this->gateway();
 
         $this->params = [
             'type' => 'purchase',

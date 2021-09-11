@@ -14,7 +14,6 @@ class MonerisTest extends TestCase
         $this->assertObjectHasAttribute('id', $moneris);
         $this->assertObjectHasAttribute('token', $moneris);
         $this->assertObjectHasAttribute('environment', $moneris);
-        $this->assertObjectHasAttribute('params', $moneris);
     }
 
     /** @test */
@@ -31,18 +30,17 @@ class MonerisTest extends TestCase
     /** @test */
     public function getting_class_properties (): void
     {
-        $moneris = $this->moneris([]);
+        $moneris = $this->moneris();
 
         $this->assertEquals($this->id, $moneris->id);
         $this->assertEquals($this->token, $moneris->token);
         $this->assertSame($this->environment, $moneris->environment);
-        $this->assertEquals([], $moneris->params);
     }
 
     /** @test */
     public function it_fails_to_retrieve_a_non_existent_property_of_the_class()
     {
-        $moneris = $this->moneris([]);
+        $moneris = $this->moneris();
 
         $this->expectException(InvalidArgumentException::class);
 
@@ -52,7 +50,7 @@ class MonerisTest extends TestCase
     /** @test */
     public function getting_the_gateway ()
     {
-        $moneris = $this->moneris([]);
+        $moneris = $this->moneris();
 
         $gateway = $moneris->connect();
 

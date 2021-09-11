@@ -23,40 +23,18 @@ class Gateway implements GatewayInterface
 {
     use Gettable, Settable;
 
-    /**
-     * Determine if we will use the Address Verification Service.
-     */
-    protected bool $avs;
     protected array $avsCodes = ['A', 'B', 'D', 'M', 'P', 'W', 'X', 'Y', 'Z'];
-
-    /**
-     * Determine if we will use the Card Validation Digits.
-     */
-    protected bool $cvd;
     protected array $cvdCodes = ['M', 'Y', 'P', 'S', 'U'];
-
-    /**
-     * Determine if we will use Credential On File.
-     */
-    protected bool $cof;
-
-    /**
-     * The current transaction.
-     */
-    protected Transaction|null $transaction;
-
 
     public function __construct (
         protected string $id,
         protected string $token,
         protected Environment $environment,
-    )
-    {
-        $this->transaction = null;
-        $this->avs = false;
-        $this->cvd = false;
-        $this->cof = false;
-    }
+        protected bool $avs = false,
+        protected bool $cvd = false,
+        protected bool $cof = false,
+        protected Transaction|null $transaction = null,
+    ) {}
 
     /**
      * Capture a pre-authorized transaction.
@@ -97,17 +75,26 @@ class Gateway implements GatewayInterface
     }
 
     /**
-     * Create a new Vault instance.
+     * Alias for self::vault().
      */
     public function cards (): Vault
     {
-        $vault = new Vault($this->id, $this->token, $this->environment);
+        return $this->vault();
+    }
 
-        $vault->avs = $this->avs;
-        $vault->cvd = $this->cvd;
-        $vault->cof = $this->cof;
-
-        return $vault;
+    /**
+     * Create a new Vault instance.
+     */
+    public function vault (): Vault
+    {
+        return new Vault(
+            $this->id,
+            $this->token,
+            $this->environment,
+            $this->avs,
+            $this->cvd,
+            $this->cof,
+        );
     }
 
     /**

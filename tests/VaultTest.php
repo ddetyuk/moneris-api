@@ -183,7 +183,7 @@ class VaultTest extends TestCase
     /** @test */
     public function it_can_tokenize_a_previous_transaction_to_add_the_transactions_credit_card_in_the_moneris_vault_and_returns_a_data_key_for_storage()
     {
-        $gateway = $this->gateway([]);
+        $gateway = $this->gateway();
 
         $response = $gateway->purchase([
             'order_id' => uniqid('1234-56789', true),
@@ -295,7 +295,7 @@ class VaultTest extends TestCase
     /** @test */
     public function it_can_submit_a_cvd_secured_purchase_with_a_credit_card_stored_in_the_moneris_vault()
     {
-        $vault = $this->gateway(['cvd' => true])->cards();
+        $vault = $this->gateway(cvd: true)->cards();
 
         $response = $this->vault->add($this->card);
         $key = $response->receipt()->read('key');
@@ -316,7 +316,7 @@ class VaultTest extends TestCase
     /** @test */
     public function it_can_submit_an_avs_secured_purchase_with_a_credit_card_stored_in_the_moneris_vault()
     {
-        $vault = $this->gateway(['avs' => true])->cards();
+        $vault = $this->gateway(avs: true)->cards();
 
         $response = $this->vault->add($this->card);
         $key = $response->receipt()->read('key');
@@ -377,7 +377,7 @@ class VaultTest extends TestCase
     /** @test */
     public function it_can_submit_a_cvd_secured_pre_authorization_request_for_a_credit_card_stored_in_the_moneris_vault()
     {
-        $vault = $this->gateway(['cvd' => true])->cards();
+        $vault = $this->gateway(cvd: true)->cards();
 
         $response = $this->vault->add($this->card);
         $key = $response->receipt()->read('key');
@@ -398,7 +398,7 @@ class VaultTest extends TestCase
     /** @test */
     public function it_can_submit_an_avs_secured_pre_authorization_request_for_a_credit_card_stored_in_the_moneris_vault()
     {
-        $vault = $this->gateway(['avs' => true])->cards();
+        $vault = $this->gateway(avs: true)->cards();
 
         $response = $this->vault->add($this->card);
         $key = $response->receipt()->read('key');
@@ -439,7 +439,7 @@ class VaultTest extends TestCase
     /** @test */
     public function it_can_make_a_purchase_for_a_credit_card_stored_in_the_moneris_vault_using_credential_on_file()
     {
-        $gateway = $this->gateway(['cof' => true]);
+        $gateway = $this->gateway(cof: true);
         $vault = $gateway->cards();
 
         $preauth_params = [

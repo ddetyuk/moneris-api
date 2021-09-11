@@ -124,7 +124,7 @@ class GatewayTest extends TestCase
     /** @test */
     public function it_can_make_a_cvd_secured_purchase_and_receive_a_response()
     {
-        $gateway = $this->gateway(['cvd' => true]);
+        $gateway = $this->gateway(cvd: true);
         $params = [
             'cvd' => '111',
             'order_id' => uniqid('1234-56789', true),
@@ -141,7 +141,7 @@ class GatewayTest extends TestCase
     /** @test */
     public function it_can_make_a_avs_secured_purchase_and_receive_a_response()
     {
-        $gateway = $this->gateway(['avs' => true]);
+        $gateway = $this->gateway(avs: true);
         $params = [
             'avs_street_number' => '123',
             'avs_street_name' => 'Fake Street',
@@ -186,7 +186,7 @@ class GatewayTest extends TestCase
     /** @test */
     public function it_can_make_a_cvd_secured_pre_authorization_and_receive_a_response()
     {
-        $gateway = $this->gateway(['cvd' => true]);
+        $gateway = $this->gateway(cvd: true);
         $params = [
             'cvd' => '111',
             'order_id' => uniqid('1234-56789', true),
@@ -203,7 +203,7 @@ class GatewayTest extends TestCase
     /** @test */
     public function it_can_make_a_avs_secured_pre_authorization_and_receive_a_response()
     {
-        $gateway = $this->gateway(['avs' => true]);
+        $gateway = $this->gateway(avs: true);
         $params = [
             'avs_street_number' => '123',
             'avs_street_name' => 'Fake Street',
@@ -231,7 +231,7 @@ class GatewayTest extends TestCase
     /** @test */
     public function it_can_verify_a_cvd_secured_card_and_receive_a_response()
     {
-        $gateway = $this->gateway(['cvd' => true]);
+        $gateway = $this->gateway(cvd: true);
         $params = [
             'cvd' => '111',
             'order_id' => uniqid('1234-56789', true),
@@ -248,7 +248,7 @@ class GatewayTest extends TestCase
     /** @test */
     public function it_can_verify_a_avs_secured_card_and_receive_a_response()
     {
-        $gateway = $this->gateway(['avs' => true]);
+        $gateway = $this->gateway(avs: true);
         $params = [
             'avs_street_number' => '123',
             'avs_street_name' => 'Fake Street',

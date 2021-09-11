@@ -2,9 +2,8 @@
 
 namespace CraigPaul\Moneris;
 
-/**
+use CraigPaul\Moneris\Values\Environment;/**
  * CraigPaul\Moneris\Vault
- *
  * @property-read string $environment
  * @property-read string $id
  * @property-read string $token
@@ -12,20 +11,6 @@ namespace CraigPaul\Moneris;
 class Vault extends Gateway
 {
     use Gettable;
-
-    /**
-     * Create a new Vault instance.
-     *
-     * @param string $id
-     * @param string $token
-     * @param string $environment
-     *
-     * @return void
-     */
-    public function __construct($id = '', $token = '', $environment = '')
-    {
-        parent::__construct($id, $token, $environment);
-    }
 
     /**
      * Add a credit card to the Vault.

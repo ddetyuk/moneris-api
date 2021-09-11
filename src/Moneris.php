@@ -21,43 +21,72 @@ class Moneris implements MonerisInterface
         protected string $id,
         protected string $token,
         protected Environment $environment,
-        protected array $params = []
+        protected bool $avs = false,
+        protected bool $cvd = false,
+        protected bool $cof = false,
     ) {}
 
     /**
-     * Create a new Moneris instance and return the Gateway.
+     * Get a new Gateway instance.
      */
     public static function create (
         string $id,
         string $token,
         Environment $environment,
-        array $params = []
+        bool $avs = false,
+        bool $cvd = false,
+        bool $cof = false,
     ): GatewayInterface
     {
-        $moneris = new static($id, $token, $environment, $params);
-
-        return $moneris->connect();
+        return (new static($id, $token, $environment, $avs, $cvd, $cof))
+            ->connect();
     }
 
     /**
-     * Create and return a new Gateway instance.
+     * Get a new Gateway instance.
+     */
+    public static function gateway (
+        string $id,
+        string $token,
+        Environment $environment,
+        bool $avs = false,
+        bool $cvd = false,
+        bool $cof = false,
+    ): GatewayInterface
+    {
+        return (new static($id, $token, $environment, $avs, $cvd, $cof))
+            ->connect();
+    }
+
+    /**
+     * Get a new Vault instance.
+     */
+    public static function vault (
+        string $id,
+        string $token,
+        Environment $environment,
+        bool $avs = false,
+        bool $cvd = false,
+        bool $cof = false,
+    ): GatewayInterface
+    {
+        return (new static($id, $token, $environment, $avs, $cvd, $cof))
+            ->connect()
+            ->vault();
+    }
+
+    /**
+     * Get a new Gateway instance.
      */
     public function connect (): GatewayInterface
     {
-        $gateway = new Gateway($this->id, $this->token, $this->environment);
-
-        if (isset($this->params['avs'])) {
-            $gateway->avs = (bool) $this->params['avs'];
-        }
-
-        if (isset($this->params['cvd'])) {
-            $gateway->cvd = (bool) $this->params['cvd'];
-        }
-
-        if (isset($this->params['cof'])) {
-            $gateway->cof = (bool) $this->params['cof'];
-        }
-
-        return $gateway;
+        return new Gateway(
+            $this->id,
+            $this->token,
+            $this->environment,
+            $this->avs,
+            $this->cvd,
+            $this->cof,
+        );
     }
 }

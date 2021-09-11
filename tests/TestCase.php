@@ -27,23 +27,35 @@ class TestCase extends \PHPUnit\Framework\TestCase
         $this->environment = Environment::testing();
     }
 
-    protected function moneris (array $params): MonerisInterface
+    protected function moneris (
+        bool $avs = false,
+        bool $cvd = false,
+        bool $cof = false,
+    ): MonerisInterface
     {
         return new Moneris(
             $this->id,
             $this->token,
             $this->environment,
-            $params,
+            $avs,
+            $cvd,
+            $cof,
         );
     }
 
-    protected function gateway (array $params): GatewayInterface
+    protected function gateway (
+        bool $avs = false,
+        bool $cvd = false,
+        bool $cof = false,
+    ): GatewayInterface
     {
         return Moneris::create(
             $this->id,
             $this->token,
             $this->environment,
-            $params
+            $avs,
+            $cvd,
+            $cof,
         );
     }
 }

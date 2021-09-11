@@ -18,7 +18,7 @@ class ProcessorTest extends TestCase
     {
         parent::setUp();
 
-        $this->gateway = $this->gateway([]);
+        $this->gateway = $this->gateway();
 
         $this->params = [
             'type' => 'purchase',
@@ -63,7 +63,7 @@ class ProcessorTest extends TestCase
     /** @test */
     public function it_can_submit_a_avs_secured_request_to_the_moneris_api()
     {
-        $gateway = $this->gateway(['avs' => true]);
+        $gateway = $this->gateway(avs: true);
         $response = $gateway->purchase([
             'order_id' => uniqid('1234-56789', true),
             'amount' => '1.00',
@@ -80,7 +80,7 @@ class ProcessorTest extends TestCase
     /** @test */
     public function it_can_submit_a_cvd_secured_request_to_the_moneris_api()
     {
-        $gateway = $this->gateway(['cvd' => true]);
+        $gateway = $this->gateway(cvd: true);
         $response = $gateway->purchase([
             'order_id' => uniqid('1234-56789', true),
             'amount' => '1.00',
