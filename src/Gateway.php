@@ -3,6 +3,7 @@
 namespace CraigPaul\Moneris;
 
 use CraigPaul\Moneris\Interfaces\GatewayInterface;
+use CraigPaul\Moneris\Values\Environment;
 use GuzzleHttp\Client;
 
 /**
@@ -46,18 +47,9 @@ class Gateway implements GatewayInterface
 
 
     public function __construct (
-        /**
-         * The Moneris Store ID.
-         */
         protected string $id,
-        /**
-         * The Moneris API Token.
-         */
         protected string $token,
-        /**
-         * The environment used for connecting to the Moneris API.
-         */
-        protected string $environment,
+        protected Environment $environment,
     )
     {
         $this->transaction = null;

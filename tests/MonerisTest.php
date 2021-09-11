@@ -5,29 +5,10 @@ use CraigPaul\Moneris\Gateway;
 
 class MonerisTest extends TestCase
 {
-    /**
-     * The Moneris API parameters.
-     *
-     * @var array
-     */
-    protected $params;
-
-    /**
-     * Set up the test environment.
-     *
-     * @return void
-     */
-    public function setUp (): void
-    {
-        parent::setUp();
-
-        $this->params = ['environment' => Moneris::ENV_TESTING];
-    }
-
     /** @test */
-    public function it_can_instantiate_via_the_constructor()
+    public function instantiation (): void
     {
-        $moneris = new Moneris($this->id, $this->token, $this->params);
+        $moneris = new Moneris($this->id, $this->token, $this->environment);
 
         $this->assertEquals(Moneris::class, get_class($moneris));
         $this->assertObjectHasAttribute('id', $moneris);
@@ -37,9 +18,9 @@ class MonerisTest extends TestCase
     }
 
     /** @test */
-    public function it_can_instantiate_via_a_static_create_method_and_return_the_gateway()
+    public function getting_the_gateway_via_static_method (): void
     {
-        $gateway = Moneris::create($this->id, $this->token, $this->params);
+        $gateway = Moneris::create($this->id, $this->token, $this->environment);
 
         $this->assertEquals(Gateway::class, get_class($gateway));
         $this->assertObjectHasAttribute('id', $gateway);
@@ -48,20 +29,20 @@ class MonerisTest extends TestCase
     }
 
     /** @test */
-    public function it_can_access_properties_of_the_class()
+    public function getting_class_properties (): void
     {
-        $moneris = new Moneris($this->id, $this->token, $this->params);
+        $moneris = $this->moneris([]);
 
         $this->assertEquals($this->id, $moneris->id);
         $this->assertEquals($this->token, $moneris->token);
-        $this->assertEquals($this->params['environment'], $moneris->environment);
-        $this->assertEquals($this->params, $moneris->params);
+        $this->assertSame($this->environment, $moneris->environment);
+        $this->assertEquals([], $moneris->params);
     }
 
     /** @test */
     public function it_fails_to_retrieve_a_non_existent_property_of_the_class()
     {
-        $moneris = new Moneris($this->id, $this->token, $this->params);
+        $moneris = $this->moneris([]);
 
         $this->expectException(InvalidArgumentException::class);
 
@@ -69,9 +50,9 @@ class MonerisTest extends TestCase
     }
 
     /** @test */
-    public function it_can_retrieve_the_gateway_for_moneris()
+    public function getting_the_gateway ()
     {
-        $moneris = new Moneris($this->id, $this->token, $this->params);
+        $moneris = $this->moneris([]);
 
         $gateway = $moneris->connect();
 

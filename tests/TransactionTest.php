@@ -1,42 +1,20 @@
 <?php
 
-use CraigPaul\Moneris\Moneris;
+use CraigPaul\Moneris\Interfaces\GatewayInterface;
 use CraigPaul\Moneris\Transaction;
 
 class TransactionTest extends TestCase
 {
-    /**
-     * The Moneris gateway.
-     *
-     * @var \CraigPaul\Moneris\Gateway
-     */
-    protected $gateway;
+    protected GatewayInterface $gateway;
+    protected array $params;
+    protected Transaction $transaction;
 
-    /**
-     * The Moneris API parameters.
-     *
-     * @var array
-     */
-    protected $params;
-
-    /**
-     * The Transaction instance.
-     *
-     * @var \CraigPaul\Moneris\Transaction
-     */
-    protected $transaction;
-
-    /**
-     * Set up the test environment.
-     *
-     * @return void
-     */
     public function setUp (): void
     {
         parent::setUp();
 
-        $this->params = ['environment' => Moneris::ENV_TESTING];
-        $this->gateway = Moneris::create($this->id, $this->token, $this->params);
+        $this->gateway = $this->gateway([]);
+
         $this->params = [
             'type' => 'purchase',
             'order_id' => uniqid('1234-56789', true),
@@ -44,6 +22,7 @@ class TransactionTest extends TestCase
             'credit_card' => $this->visa,
             'expdate' => '2012',
         ];
+
         $this->transaction = new Transaction($this->gateway, $this->params);
     }
 

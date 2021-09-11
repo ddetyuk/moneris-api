@@ -1,9 +1,10 @@
-<?php
+<?php /** @noinspection PhpPureAttributeCanBeAddedInspection */
 
 namespace CraigPaul\Moneris;
 
 use CraigPaul\Moneris\Interfaces\GatewayInterface;
 use CraigPaul\Moneris\Interfaces\MonerisInterface;
+use CraigPaul\Moneris\Values\Environment;
 
 /**
  * CraigPaul\Moneris\Moneris
@@ -16,69 +17,24 @@ class Moneris implements MonerisInterface
 {
     use Gettable;
 
-    const ENV_LIVE    = 'live';
-    const ENV_STAGING = 'staging';
-    const ENV_TESTING = 'testing';
+    public function __construct(
+        protected string $id,
+        protected string $token,
+        protected Environment $environment,
+        protected array $params = []
+    ) {}
 
     /**
-     * The environment used for connecting to the Moneris API.
-     *
-     * @var string
-     */
-    protected $environment;
-
-    /**
-     * The Moneris Store ID.
-     *
-     * @var string
-     */
-    protected $id;
-
-    /**
-     * The extra parameters needed for Moneris.
-     *
-     * @var array
-     */
-    protected $params;
-
-    /**
-     * The Moneris API Token.
-     *
-     * @var string
-     */
-    protected $token;
-
-    /**
-     * Create a new Moneris instance.
-     *
-     * @param string $id
-     * @param string $token
-     * @param array $params
-     */
-    public function __construct($id = '', $token = '', array $params = [])
-    {
-        $this->id = $id;
-        $this->token = $token;
-        $this->environment = $params['environment'] ?? self::ENV_LIVE;
-        $this->params = $params;
-    }
-
-    /**
-     * Create a new Moneris instance.
-     *
-     * @param string $id
-     * @param string $token
-     * @param array $params
-     *
-     * @return \CraigPaul\Moneris\Gateway
+     * Create a new Moneris instance and return the Gateway.
      */
     public static function create (
-        $id = '',
-        $token = '',
+        string $id,
+        string $token,
+        Environment $environment,
         array $params = []
     ): GatewayInterface
     {
-        $moneris = new static($id, $token, $params);
+        $moneris = new static($id, $token, $environment, $params);
 
         return $moneris->connect();
     }
@@ -91,15 +47,15 @@ class Moneris implements MonerisInterface
         $gateway = new Gateway($this->id, $this->token, $this->environment);
 
         if (isset($this->params['avs'])) {
-            $gateway->avs = boolval($this->params['avs']);
+            $gateway->avs = (bool) $this->params['avs'];
         }
 
         if (isset($this->params['cvd'])) {
-            $gateway->cvd = boolval($this->params['cvd']);
+            $gateway->cvd = (bool) $this->params['cvd'];
         }
 
         if (isset($this->params['cof'])) {
-            $gateway->cof = boolval($this->params['cof']);
+            $gateway->cof = (bool) $this->params['cof'];
         }
 
         return $gateway;

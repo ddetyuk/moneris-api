@@ -2,6 +2,7 @@
 
 namespace CraigPaul\Moneris;
 
+use CraigPaul\Moneris\Interfaces\GatewayInterface;
 use SimpleXMLElement;
 
 /**
@@ -22,29 +23,18 @@ class Transaction
 
     /**
      * The errors for the transaction.
-     *
-     * @var array
      */
-    protected $errors;
-
-    /**
-     * The Gateway instance.
-     *
-     * @var \CraigPaul\Moneris\Gateway
-     */
-    protected $gateway;
+    protected array $errors;
 
     /**
      * The extra parameters needed for Moneris.
-     *
-     * @var array
      */
-    protected $params;
+    protected array $params;
 
     /**
-     * @var \SimpleXMLElement|null
+     * The response.
      */
-    protected $response = null;
+    protected SimpleXMLElement|null $response = null;
 
     /**
      * Create a new Transaction instance.
@@ -52,18 +42,19 @@ class Transaction
      * @param \CraigPaul\Moneris\Gateway $gateway
      * @param array $params
      */
-    public function __construct(Gateway $gateway, array $params = [])
+    public function __construct(
+        protected GatewayInterface $gateway,
+        array $params = []
+    )
     {
-        $this->gateway = $gateway;
         $this->params = $this->prepare($params);
     }
 
     /**
-     * Retrieve the amount for the transaction. The is only available on certain transaction types.
-     *
-     * @return string|null
+     * Retrieve the amount for the transaction. The is only available on
+     * certain transaction types.
      */
-    public function amount()
+    public function amount (): string|null
     {
         if (isset($this->params['amount'])) {
             return $this->params['amount'];
@@ -77,10 +68,8 @@ class Transaction
      *
      * @param array $params
      * @param \SimpleXMLElement $type
-     *
-     * @return void
      */
-    protected function append(array $params, SimpleXMLElement $type)
+    protected function append (array $params, SimpleXMLElement $type): void
     {
         foreach ($params as $key => $value) {
             if (is_array($value)) {
@@ -104,35 +93,32 @@ class Transaction
     }
 
     /**
-     * Check that the required parameters have not been provided to the transaction.
-     *
-     * @return bool
+     * Check that the required parameters have not been provided to the
+     * transaction.
      */
-    public function invalid()
+    public function invalid (): bool
     {
         return !$this->valid();
     }
 
     /**
-     * Retrieve the transaction number, assuming the transaction has been processed.
-     *
-     * @return null|string
+     * Retrieve the transaction number, assuming the transaction has been
+     * processed.
      */
-    public function number()
+    public function number (): string|null
     {
         if (is_null($this->response)) {
             return null;
         }
 
-        return (string)$this->response->receipt->TransID;
+        return (string) $this->response->receipt->TransID;
     }
 
     /**
-     * Retrieve the order id for the transaction. The is only available on certain transaction types.
-     *
-     * @return string|null
+     * Retrieve the order id for the transaction. The is only available on
+     * certain transaction types.
      */
-    public function order()
+    public function order (): string|null
     {
         if (isset($this->params['order_id'])) {
             return $this->params['order_id'];
@@ -143,12 +129,8 @@ class Transaction
 
     /**
      * Prepare the transaction parameters.
-     *
-     * @param array $params
-     *
-     * @return array
      */
-    protected function prepare(array $params)
+    protected function prepare (array $params): array
     {
         foreach ($params as $key => $value) {
             if (is_string($value)) {
@@ -180,10 +162,8 @@ class Transaction
 
     /**
      * Convert the transaction parameters into an XML structure.
-     *
-     * @return string|bool
      */
-    public function toXml()
+    public function toXml (): string|bool
     {
         $gateway = $this->gateway;
         $params = $this->params;
@@ -260,11 +240,10 @@ class Transaction
     }
 
     /**
-     * Check that the required parameters have been provided to the transaction.
-     *
-     * @return bool
+     * Check that the required parameters have been provided to the
+     * transaction.
      */
-    public function valid()
+    public function valid (): bool
     {
         $params = $this->params;
         $errors = [];
@@ -607,12 +586,8 @@ class Transaction
 
     /**
      * Validate the result of the Moneris API call.
-     *
-     * @param \SimpleXMLElement $result
-     *
-     * @return \CraigPaul\Moneris\Response
      */
-    public function validate(SimpleXMLElement $result)
+    public function validate (SimpleXMLElement $result): Response
     {
         $this->response = $result;
 

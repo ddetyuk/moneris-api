@@ -128,7 +128,7 @@ class Response
      *
      * @return $this
      */
-    public function validate()
+    public function validate (): self
     {
         $receipt = $this->receipt();
         $gateway = $this->transaction->gateway;
