@@ -10,8 +10,10 @@ use CraigPaul\Moneris\Values\Environment;
  * CraigPaul\Moneris\Moneris
  * @property-read string $id
  * @property-read string $token
- * @property-read string $environment
- * @property-read string $params
+ * @property-read Environment $environment
+ * @property-read bool $avs
+ * @property-read bool $cvd
+ * @property-read bool $cof
  */
 class Moneris implements MonerisInterface
 {
@@ -38,8 +40,7 @@ class Moneris implements MonerisInterface
         bool $cof = false,
     ): GatewayInterface
     {
-        return (new static($id, $token, $environment, $avs, $cvd, $cof))
-            ->connect();
+        return self::gateway($id, $token, $environment, $avs, $cvd, $cof);
     }
 
     /**
@@ -70,8 +71,7 @@ class Moneris implements MonerisInterface
         bool $cof = false,
     ): GatewayInterface
     {
-        return (new static($id, $token, $environment, $avs, $cvd, $cof))
-            ->connect()
+        return self::gateway($id, $token, $environment, $avs, $cvd, $cof)
             ->vault();
     }
 

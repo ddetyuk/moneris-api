@@ -2,18 +2,39 @@
 
 use CraigPaul\Moneris\Moneris;
 use CraigPaul\Moneris\Gateway;
+use CraigPaul\Moneris\Vault;
 
 class MonerisTest extends TestCase
 {
     /** @test */
     public function instantiation (): void
     {
-        $moneris = new Moneris($this->id, $this->token, $this->environment);
+        $moneris = $this->moneris();
 
-        $this->assertEquals(Moneris::class, get_class($moneris));
-        $this->assertObjectHasAttribute('id', $moneris);
-        $this->assertObjectHasAttribute('token', $moneris);
-        $this->assertObjectHasAttribute('environment', $moneris);
+        $this->assertInstanceOf(Moneris::class, $moneris);
+        $this->assertPropertiesAreGettable($moneris);
+    }
+
+    /** @test */
+    public function instantiation_with_optional_params (): void
+    {
+        $moneris = $this->moneris(avs: true);
+
+        $this->assertTrue($moneris->avs);
+        $this->assertFalse($moneris->cvd);
+        $this->assertFalse($moneris->cof);
+
+        $moneris = $this->moneris(cvd: true);
+
+        $this->assertFalse($moneris->avs);
+        $this->assertTrue($moneris->cvd);
+        $this->assertFalse($moneris->cof);
+
+        $moneris = $this->moneris(cof: true);
+
+        $this->assertFalse($moneris->avs);
+        $this->assertFalse($moneris->cvd);
+        $this->assertTrue($moneris->cof);
     }
 
     /** @test */
@@ -21,20 +42,17 @@ class MonerisTest extends TestCase
     {
         $gateway = Moneris::create($this->id, $this->token, $this->environment);
 
-        $this->assertEquals(Gateway::class, get_class($gateway));
-        $this->assertObjectHasAttribute('id', $gateway);
-        $this->assertObjectHasAttribute('token', $gateway);
-        $this->assertObjectHasAttribute('environment', $gateway);
+        $this->assertInstanceOf(Gateway::class, $gateway);
+        $this->assertPropertiesAreGettable($gateway);
     }
 
     /** @test */
-    public function getting_class_properties (): void
+    public function getting_the_vault_via_static_method (): void
     {
-        $moneris = $this->moneris();
+        $vault = Moneris::vault($this->id, $this->token, $this->environment);
 
-        $this->assertEquals($this->id, $moneris->id);
-        $this->assertEquals($this->token, $moneris->token);
-        $this->assertSame($this->environment, $moneris->environment);
+        $this->assertInstanceOf(Vault::class, $vault);
+        $this->assertPropertiesAreGettable($vault);
     }
 
     /** @test */
@@ -54,9 +72,17 @@ class MonerisTest extends TestCase
 
         $gateway = $moneris->connect();
 
-        $this->assertEquals(Gateway::class, get_class($gateway));
-        $this->assertObjectHasAttribute('id', $gateway);
-        $this->assertObjectHasAttribute('token', $gateway);
-        $this->assertObjectHasAttribute('environment', $gateway);
+        $this->assertInstanceOf(Gateway::class, $gateway);
+        $this->assertPropertiesAreGettable($gateway);
+    }
+
+    protected function assertPropertiesAreGettable (object $object): void
+    {
+        $this->assertSame($this->id, $object->id);
+        $this->assertSame($this->token, $object->token);
+        $this->assertSame($this->environment, $object->environment);
+        $this->assertFalse($object->avs);
+        $this->assertFalse($object->cvd);
+        $this->assertFalse($object->cof);
     }
 }
