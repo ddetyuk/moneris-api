@@ -2,9 +2,9 @@
 
 namespace CraigPaul\Moneris;
 
+use InvalidArgumentException;
+
 /**
- * CraigPaul\Moneris\Customer
- *
  * @property array $data
  * @property string $email
  * @property string $id
@@ -17,18 +17,9 @@ class Customer
 
     /**
      * The Customer data.
-     *
-     * @var array
      */
-    protected $data = [];
+    protected array $data = [];
 
-    /**
-     * Create a new Customer instance.
-     *
-     * @param array $params
-     *
-     * @return void
-     */
     public function __construct(array $params = [])
     {
         $this->data = $this->prepare($params, [
@@ -40,26 +31,18 @@ class Customer
     }
 
     /**
-     * Create a new Customer instance.
-     *
-     * @param array $params
-     *
-     * @return \CraigPaul\Moneris\Customer
+     * Static constructor
      */
-    public static function create(array $params = [])
+    public static function create (array $params = []): static
     {
         return new static($params);
     }
 
     /**
-     * Retrieve a property off of the class.
-     *
-     * @param string $property
-     *
+     * Retrieve a property off of the class or from the data array.
      * @throws \InvalidArgumentException
-     * @return mixed
      */
-    public function __get($property)
+    public function __get (string $property): mixed
     {
         if (property_exists($this, $property)) {
             return $this->$property;
@@ -69,26 +52,25 @@ class Customer
             return $this->data[$property];
         }
 
-        throw new \InvalidArgumentException('['.get_class($this).'] does not contain a property named ['.$property.']');
+        throw new InvalidArgumentException(sprintf(
+            '[%s] does not contain a property named [%s]',
+            $this::class,
+            $property
+        ));
     }
 
     /**
-     * Set a property that exists on the class.
-     *
-     * @param string $property
-     * @param mixed $value
-     *
-     * @throws \InvalidArgumentException
-     * @return void
+     * Set a property that exists on the class, otherwise add it to the data
+     * array.
      */
-    public function __set($property, $value)
+    public function __set(string $property, mixed $value): void
     {
         if (property_exists($this, $property)) {
             $this->$property = $value;
-        } elseif (!is_null($this->data)) {
-            $this->data[$property] = $value;
-        } else {
-            throw new \InvalidArgumentException('['.get_class($this).'] does not contain a property named ['.$property.']');
+
+            return;
         }
+
+        $this->data[$property] = $value;
     }
 }

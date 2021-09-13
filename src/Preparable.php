@@ -6,12 +6,10 @@ trait Preparable
 {
     /**
      * Prepare the receipt data.
-     *
      * @param $data
-     *
      * @return array
      */
-    protected function prepare($data, array $params)
+    protected function prepare ($data, array $params): array
     {
         $array = [];
 
@@ -37,8 +35,18 @@ trait Preparable
                 if (isset($param['cast'])) {
                     switch ($param['cast']) {
                         case 'boolean':
-                            $array[$property] = isset($array[$property]) ? (is_string($array[$property]) ? $array[$property] : $array[$property]->__toString()) : null;
-                            $array[$property] = isset($array[$property]) && !is_null($array[$property]) ? ($array[$property] === 'true' ? true : false) : false;
+                            $array[$property] = isset($array[$property])
+                                ? (is_string($array[$property])
+                                    ? $array[$property]
+                                    : $array[$property]->__toString()
+                                  )
+                                : null;
+                            $array[$property] = isset($array[$property]) && !is_null($array[$property])
+                                ? ($array[$property] === 'true'
+                                    ? true
+                                    : false
+                                  )
+                                : false;
 
                             break;
                         case 'float':

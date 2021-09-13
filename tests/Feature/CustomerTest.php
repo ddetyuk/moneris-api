@@ -4,29 +4,37 @@ namespace CraigPaul\Moneris\Tests\Feature;
 
 use CraigPaul\Moneris\Customer;
 use CraigPaul\Moneris\Tests\TestCase;
+use InvalidArgumentException;
 
 class CustomerTest extends TestCase
 {
+    protected array $rawData = [
+        'id' => null,
+        'email' => null,
+        'phone' => null,
+        'note' => null,
+    ];
+
     /** @test */
-    public function it_can_instantiate_via_the_constructor()
+    public function instantiation (): void
     {
         $customer = new Customer();
 
-        $this->assertEquals(Customer::class, get_class($customer));
-        $this->assertObjectHasAttribute('data', $customer);
+        $this->assertInstanceOf(Customer::class, $customer);
+        $this->assertSame($this->rawData, $customer->data);
     }
 
     /** @test */
-    public function it_can_instantiate_via_a_static_create_method()
+    public function static_constructor (): void
     {
         $customer = Customer::create();
 
-        $this->assertEquals(Customer::class, get_class($customer));
-        $this->assertObjectHasAttribute('data', $customer);
+        $this->assertInstanceOf(Customer::class, $customer);
+        $this->assertSame($this->rawData, $customer->data);
     }
 
     /** @test */
-    public function it_can_access_customer_data_that_exists_on_the_class()
+    public function getting_customer_data (): void
     {
         $params = [
             'id' => uniqid('customer-', true),
@@ -34,11 +42,39 @@ class CustomerTest extends TestCase
             'phone' => '555-555-5555',
             'note' => 'Customer note',
         ];
+
         $customer = Customer::create($params);
 
-        $this->assertEquals($params['id'], $customer->id);
-        $this->assertEquals($params['email'], $customer->email);
-        $this->assertEquals($params['phone'], $customer->phone);
-        $this->assertEquals($params['note'], $customer->note);
+        array_walk(
+            $params,
+            fn ($v, $k) => $this->assertSame($params[$k], $customer->{$k})
+        );
+
+        $this->assertSame($params, $customer->data);
+    }
+
+    /** @test */
+    public function failing_to_get_customer_data (): void
+    {
+        $customer = Customer::create();
+
+        $this->expectException(InvalidArgumentException::class);
+
+        /** @noinspection PhpUndefinedFieldInspection */
+        /** @noinspection PhpExpressionResultUnusedInspection */
+        $customer->nonexistantProperty;
+    }
+
+    /** @test */
+    public function setting_data (): void
+    {
+        $customer = Customer::create();
+
+        $this->assertSame($this->rawData, $customer->data);
+
+        $newData = ['new', 'data'];
+        $customer->data = $newData;
+
+        $this->assertSame($newData, $customer->data);
     }
 }
