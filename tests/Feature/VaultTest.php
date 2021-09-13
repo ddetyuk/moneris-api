@@ -1,11 +1,16 @@
 <?php
 
+namespace CraigPaul\Moneris\Tests\Feature;
+
+use CraigPaul\Moneris\Tests\Support\Stubs\VaultExpiringStub;
+use CraigPaul\Moneris\Tests\TestCase;
 use Faker\Factory as Faker;
 use CraigPaul\Moneris\Vault;
 use CraigPaul\Moneris\Customer;
 use CraigPaul\Moneris\Processor;
 use CraigPaul\Moneris\CreditCard;
 use CraigPaul\Moneris\Transaction;
+use function mock_handler;
 
 class VaultTest extends TestCase
 {

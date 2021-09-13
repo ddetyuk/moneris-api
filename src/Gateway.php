@@ -3,6 +3,7 @@
 namespace CraigPaul\Moneris;
 
 use CraigPaul\Moneris\Interfaces\GatewayInterface;
+use CraigPaul\Moneris\Values\Crypt;
 use CraigPaul\Moneris\Values\Environment;
 use GuzzleHttp\Client;
 
@@ -128,16 +129,6 @@ class Gateway implements GatewayInterface
     }
 
     /**
-     * Process a transaction through the Moneris API.
-     */
-    protected function process (Transaction $transaction): Response
-    {
-        $processor = new Processor(new Client());
-
-        return $processor->process($transaction);
-    }
-
-    /**
      * Refund a transaction.
      */
     public function refund (
@@ -165,16 +156,6 @@ class Gateway implements GatewayInterface
         $transaction = $this->transaction($params);
 
         return $this->process($transaction);
-    }
-
-    /**
-     * Get or create a new Transaction instance.
-     */
-    protected function transaction (array|null $params = null): Transaction
-    {
-        return !$this->transaction || is_array($params)
-            ? $this->transaction = new Transaction($this, $params)
-            : $this->transaction;
     }
 
     /**
@@ -215,5 +196,25 @@ class Gateway implements GatewayInterface
         $transaction = $this->transaction($params);
 
         return $this->process($transaction);
+    }
+
+    /**
+     * Process a transaction through the Moneris API.
+     */
+    protected function process (Transaction $transaction): Response
+    {
+        $processor = new Processor(new Client());
+
+        return $processor->process($transaction);
+    }
+
+    /**
+     * Get or create a new Transaction instance.
+     */
+    protected function transaction (array|null $params = null): Transaction
+    {
+        return !$this->transaction || is_array($params)
+            ? $this->transaction = new Transaction($this, $params)
+            : $this->transaction;
     }
 }

@@ -1,5 +1,8 @@
 <?php
 
+namespace CraigPaul\Moneris\Tests\Feature;
+
+use CraigPaul\Moneris\Tests\TestCase;
 use Faker\Factory as Faker;
 use CraigPaul\Moneris\Vault;
 use CraigPaul\Moneris\Gateway;

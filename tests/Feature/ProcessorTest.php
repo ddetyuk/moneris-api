@@ -1,8 +1,11 @@
 <?php
 
+namespace CraigPaul\Moneris\Tests\Feature;
+
 use CraigPaul\Moneris\Interfaces\GatewayInterface;
+use CraigPaul\Moneris\Tests\TestCase;
 use GuzzleHttp\Client;
-use CraigPaul\Moneris\Crypt;
+use CraigPaul\Moneris\Values\Crypt;
 use CraigPaul\Moneris\Response;
 use CraigPaul\Moneris\Processor;
 use CraigPaul\Moneris\Transaction;

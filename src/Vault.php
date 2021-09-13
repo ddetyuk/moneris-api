@@ -2,23 +2,16 @@
 
 namespace CraigPaul\Moneris;
 
-use CraigPaul\Moneris\Values\Environment;/**
- * CraigPaul\Moneris\Vault
- * @property-read string $environment
- * @property-read string $id
- * @property-read string $token
- */
+use CraigPaul\Moneris\Values\Crypt;
+
 class Vault extends Gateway
 {
     use Gettable;
 
     /**
      * Add a credit card to the Vault.
-     * @param \CraigPaul\Moneris\CreditCard $card
-     * @param array $extraParams
-     * @return \CraigPaul\Moneris\Response
      */
-    public function add(CreditCard $card, $extraParams = [])
+    public function add (CreditCard $card, array $extraParams = []): Response
     {
         $params = array_merge($extraParams, [
             'type' => 'res_add_cc',

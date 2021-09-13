@@ -31,12 +31,11 @@
         }
     },
     "autoload-dev": {
-        "classmap": [
-            "tests/stubs/",
-            "tests/TestCase.php"
-        ],
+        "psr-4": {
+            "CraigPaul\\Moneris\\Tests\\": "tests"
+        },
         "files": [
-            "tests/helpers.php"
+            "tests/Support/helpers.php"
         ]
     },
     "scripts": {

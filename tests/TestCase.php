@@ -1,5 +1,7 @@
 <?php
 
+namespace CraigPaul\Moneris\Tests;
+
 use CraigPaul\Moneris\Interfaces\GatewayInterface;
 use CraigPaul\Moneris\Interfaces\MonerisInterface;
 use CraigPaul\Moneris\Moneris;

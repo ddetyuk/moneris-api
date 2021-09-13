@@ -1,6 +1,9 @@
 <?php
 
+namespace CraigPaul\Moneris\Tests\Feature;
+
 use CraigPaul\Moneris\Interfaces\GatewayInterface;
+use CraigPaul\Moneris\Tests\TestCase;
 use CraigPaul\Moneris\Transaction;
 
 class TransactionTest extends TestCase

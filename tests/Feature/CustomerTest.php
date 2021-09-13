@@ -1,6 +1,9 @@
 <?php
 
+namespace CraigPaul\Moneris\Tests\Feature;
+
 use CraigPaul\Moneris\Customer;
+use CraigPaul\Moneris\Tests\TestCase;
 
 class CustomerTest extends TestCase
 {

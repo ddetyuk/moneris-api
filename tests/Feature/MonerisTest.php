@@ -1,7 +1,11 @@
 <?php
 
+namespace CraigPaul\Moneris\Tests\Feature;
+
 use CraigPaul\Moneris\Moneris;
 use CraigPaul\Moneris\Gateway;
+use InvalidArgumentException;
+use CraigPaul\Moneris\Tests\TestCase;
 use CraigPaul\Moneris\Vault;
 
 /**
