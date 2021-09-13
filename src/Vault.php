@@ -2,11 +2,26 @@
 
 namespace CraigPaul\Moneris;
 
+use CraigPaul\Moneris\Traits\GettableTrait;
 use CraigPaul\Moneris\Values\Crypt;
 
 class Vault extends Gateway
 {
-    use Gettable;
+    use GettableTrait;
+
+    /**
+     * Create a new Vault instance.
+     *
+     * @param string $id
+     * @param string $token
+     * @param string $environment
+     *
+     * @return $this
+     */
+    public static function create($id = '', $token = '', $environment = '')
+    {
+        return new static($id, $token, $environment);
+    }
 
     /**
      * Add a credit card to the Vault.
@@ -32,20 +47,6 @@ class Vault extends Gateway
         $transaction = $this->transaction($params);
 
         return $this->process($transaction);
-    }
-
-    /**
-     * Create a new Vault instance.
-     *
-     * @param string $id
-     * @param string $token
-     * @param string $environment
-     *
-     * @return $this
-     */
-    public static function create($id = '', $token = '', $environment = '')
-    {
-        return new static($id, $token, $environment);
     }
 
     /**

@@ -1,10 +1,11 @@
-<?php
+<?php /** @noinspection PhpUnused */
 
 namespace CraigPaul\Moneris;
 
-/**
+use CraigPaul\Moneris\Traits\GettableTrait;
+use CraigPaul\Moneris\Traits\SettableTrait;
+use CraigPaul\Moneris\Validation\Errors\ErrorList;/**
  * CraigPaul\Moneris\Response
- *
  * @property array $errors
  * @property bool $failedAvs
  * @property bool $failedCvd
@@ -14,7 +15,7 @@ namespace CraigPaul\Moneris;
  */
 class Response
 {
-    use Gettable, Settable;
+    use GettableTrait, SettableTrait;
 
     const ERROR                    = -23;
     const INVALID_TRANSACTION_DATA = 0;
@@ -47,74 +48,44 @@ class Response
 
     const POST_FRAUD = -22;
 
-    /**
-     * Any errors that arise from processing a transaction.
-     *
-     * @var array
-     */
-    protected $errors = [];
+    protected ErrorList $errors;
 
     /**
      * Determine if we have failed Address Verification Service verification.
-     *
-     * @var bool
      */
-    protected $failedAvs = false;
+    protected bool $failedAvs = false;
 
     /**
      * Determine if we have failed Card Validation Digits verification.
-     *
-     * @var bool
      */
-    protected $failedCvd = false;
+    protected bool $failedCvd = false;
 
     /**
      * The status code.
-     *
-     * @var null|int
      */
-    protected $status = null;
+    protected int|null $status = null;
 
     /**
      * Determines whether the response was successful.
-     *
-     * @var bool
      */
-    protected $successful = true;
-
-    /**
-     * @var \CraigPaul\Moneris\Transaction
-     */
-    protected $transaction;
+    protected bool $successful = true;
 
     /**
      * Create a new Response instance.
      *
      * @param \CraigPaul\Moneris\Transaction $transaction
      */
-    public function __construct(Transaction $transaction)
-    {
-        $this->transaction = $transaction;
-    }
+    public function __construct(protected Transaction $transaction) {}
 
-    /**
-     * Create a new Response instance.
-     *
-     * @param \CraigPaul\Moneris\Transaction $transaction
-     *
-     * @return $this
-     */
-    public static function create(Transaction $transaction)
+    public static function create (Transaction $transaction): self
     {
-        return new static($transaction);
+        return new self($transaction);
     }
 
     /**
      * Retrieve the transaction's receipt if it is available.
-     *
-     * @return \CraigPaul\Moneris\Receipt|null
      */
-    public function receipt()
+    public function receipt (): Receipt|null
     {
         if (!is_null($response = $this->transaction->response)) {
             return new Receipt($response->receipt);
@@ -125,8 +96,6 @@ class Response
 
     /**
      * Validate the response.
-     *
-     * @return $this
      */
     public function validate (): self
     {
@@ -150,28 +119,13 @@ class Response
         $code = !is_null($receipt->read('avs_result')) ? $receipt->read('avs_result') : false;
 
         if ($gateway->avs && $code && $code !== 'null' && !in_array($code, $gateway->avsCodes)) {
-            switch ($code) {
-                case 'B':
-                case 'C':
-                    $this->status = self::AVS_POSTAL_CODE;
-                    break;
-                case 'G':
-                case 'I':
-                case 'P':
-                case 'S':
-                case 'U':
-                case 'Z':
-                    $this->status = self::AVS_ADDRESS;
-                    break;
-                case 'N':
-                    $this->status = self::AVS_NO_MATCH;
-                    break;
-                case 'R':
-                    $this->status = self::AVS_TIMEOUT;
-                    break;
-                default:
-                    $this->status = self::AVS;
-            }
+            $this->status = match ($code) {
+                'B', 'C' => self::AVS_POSTAL_CODE,
+                'G', 'I', 'P', 'S', 'U', 'Z' => self::AVS_ADDRESS,
+                'N' => self::AVS_NO_MATCH,
+                'R' => self::AVS_TIMEOUT,
+                default => self::AVS,
+            };
 
             $this->failedAvs = true;
 
@@ -190,69 +144,32 @@ class Response
         return $this;
     }
 
-    protected function convertReceiptCodeToStatus(Receipt $receipt)
+    protected function convertReceiptCodeToStatus (Receipt $receipt): int
     {
         $code = $receipt->read('code');
 
         if ($code === 'null' && $message_status = $this->convertReceiptMessageToStatus($receipt)) {
             $status = $message_status;
         } else {
-            switch ($receipt->read('code')) {
-                case '050':
-                case '074':
-                case 'null':
-                    $status = self::SYSTEM_UNAVAILABLE;
-                    break;
-                case '051':
-                case '482':
-                case '484':
-                    $status = self::CARD_EXPIRED;
-                    break;
-                case '075':
-                    $status = self::INVALID_CARD;
-                    break;
-
-                case '208':
-                case '475':
-                    $status = self::INVALID_EXPIRY_DATE;
-                    break;
-
-                case '076':
-                case '079':
-                case '080':
-                case '081':
-                case '082':
-                case '083':
-                    $status = self::INSUFFICIENT_FUNDS;
-                    break;
-                case '077':
-                    $status = self::PREAUTH_FULL;
-                    break;
-                case '078':
-                    $status = self::DUPLICATE_TRANSACTION;
-                    break;
-                case '481':
-                case '483':
-                    $status = self::DECLINED;
-                    break;
-                case '485':
-                    $status = self::NOT_AUTHORIZED;
-                    break;
-                case '486':
-                case '487':
-                case '489':
-                case '490':
-                    $status = self::CVD;
-                    break;
-                default:
-                    $status = self::ERROR;
-            }
+            $status = match ($receipt->read('code')) {
+                '050', '074', 'null' => self::SYSTEM_UNAVAILABLE,
+                '051', '482', '484' => self::CARD_EXPIRED,
+                '075' => self::INVALID_CARD,
+                '208', '475' => self::INVALID_EXPIRY_DATE,
+                '076', '079', '080', '081', '082', '083' => self::INSUFFICIENT_FUNDS,
+                '077' => self::PREAUTH_FULL,
+                '078' => self::DUPLICATE_TRANSACTION,
+                '481', '483' => self::DECLINED,
+                '485' => self::NOT_AUTHORIZED,
+                '486', '487', '489', '490' => self::CVD,
+                default => self::ERROR,
+            };
         }
 
         return $status;
     }
 
-    protected function convertReceiptMessageToStatus(Receipt $receipt)
+    protected function convertReceiptMessageToStatus (Receipt $receipt): int
     {
         $message = (string)$receipt->read('message');
         $status = null;

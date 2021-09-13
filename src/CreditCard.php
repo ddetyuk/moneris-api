@@ -2,6 +2,8 @@
 
 namespace CraigPaul\Moneris;
 
+use CraigPaul\Moneris\Traits\GettableTrait;
+use CraigPaul\Moneris\Traits\SettableTrait;
 use CraigPaul\Moneris\Values\Crypt;
 
 /**
@@ -12,7 +14,7 @@ use CraigPaul\Moneris\Values\Crypt;
  */
 class CreditCard
 {
-    use Gettable, Settable;
+    use GettableTrait, SettableTrait;
 
     protected Crypt $crypt;
     protected Customer|null $customer = null;

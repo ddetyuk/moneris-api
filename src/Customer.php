@@ -2,6 +2,7 @@
 
 namespace CraigPaul\Moneris;
 
+use CraigPaul\Moneris\Traits\PreparableTrait;
 use InvalidArgumentException;
 
 /**
@@ -13,7 +14,7 @@ use InvalidArgumentException;
  */
 class Customer
 {
-    use Preparable;
+    use PreparableTrait;
 
     /**
      * The Customer data.

@@ -11,6 +11,9 @@ use CraigPaul\Moneris\Response;
 use CraigPaul\Moneris\Processor;
 use CraigPaul\Moneris\Transaction;
 
+/**
+ * @covers \CraigPaul\Moneris\Response
+ */
 class ResponseTest extends TestCase
 {
     protected GatewayInterface $gateway;
@@ -39,29 +42,29 @@ class ResponseTest extends TestCase
     }
 
     /** @test */
-    public function it_can_instantiate_via_the_constructor()
+    public function instantiating (): void
     {
         $response = new Response($this->transaction);
 
-        $this->assertEquals(Response::class, get_class($response));
-        $this->assertObjectHasAttribute('status', $response);
-        $this->assertObjectHasAttribute('successful', $response);
-        $this->assertObjectHasAttribute('transaction', $response);
+        $this->assertInstanceOf(Response::class, $response);
+        $this->assertSame(null, $response->status);
+        $this->assertSame(true, $response->successful);
+        $this->assertSame($this->transaction, $response->transaction);
     }
 
     /** @test */
-    public function it_can_instantiate_via_a_static_create_method()
+    public function static_constructor (): void
     {
         $response = Response::create($this->transaction);
 
-        $this->assertEquals(Response::class, get_class($response));
-        $this->assertObjectHasAttribute('status', $response);
-        $this->assertObjectHasAttribute('successful', $response);
-        $this->assertObjectHasAttribute('transaction', $response);
+        $this->assertInstanceOf(Response::class, $response);
+        $this->assertSame(null, $response->status);
+        $this->assertSame(true, $response->successful);
+        $this->assertSame($this->transaction, $response->transaction);
     }
 
     /** @test */
-    public function it_can_validate_an_api_response_from_a_proper_transaction()
+    public function getting_a_successful_response (): void
     {
         $response = $this->processor->process($this->transaction);
 
@@ -71,7 +74,7 @@ class ResponseTest extends TestCase
     }
 
     /** @test */
-    public function it_can_receive_a_receipt_from_a_properly_processed_transaction()
+    public function getting_a_receipt_for_a_successful_response (): void
     {
         $response = $this->processor->process($this->transaction);
 
@@ -79,25 +82,37 @@ class ResponseTest extends TestCase
         $response = $response->validate();
         $receipt = $response->receipt();
 
-        $this->assertNotNull($receipt);
-        $this->assertEquals(Receipt::class, get_class($receipt));
-        $this->assertEquals($this->params['order_id'], $receipt->read('id'));
-        $this->assertObjectHasAttribute('data', $receipt);
+        $this->assertInstanceOf(Receipt::class, $receipt);
+        $this->assertSame(
+            $this->params['order_id'],
+            $receipt->read('id'),
+        );
     }
 
     /** @test */
-    public function it_processes_expdate_error_edge_cases_from_message()
+    public function receipt_is_null_when_unprocessed (): void
+    {
+        $response = new Response(new Transaction($this->gateway(), []));
+
+        $this->assertNull($response->receipt());
+    }
+
+    /** @test */
+    public function processing_expdate_error_edge_cases_from_message (): void
     {
         $response = $this->processTransaction([
             'expdate' => 'foo'
         ]);
 
         $this->assertFalse($response->successful);
-        $this->assertEquals(Response::INVALID_EXPIRY_DATE, $response->status);
+        $this->assertEquals(
+            Response::INVALID_EXPIRY_DATE,
+            $response->status
+        );
     }
 
     /** @test */
-    public function it_processes_credit_card_error_edge_cases_from_message()
+    public function processing_cc_error_edge_cases_from_message (): void
     {
         $response = $this->processTransaction([
             'credit_card' => '1234'

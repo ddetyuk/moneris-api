@@ -37,6 +37,9 @@ class Processor
      */
     public function config (Environment|null $environment = null): array
     {
+        /**
+         * @codeCoverageIgnore
+         */
         if ($environment && $environment->isLive()) {
             $this->config['host'] = 'www3.moneris.com';
         }

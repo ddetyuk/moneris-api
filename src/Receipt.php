@@ -2,14 +2,13 @@
 
 namespace CraigPaul\Moneris;
 
+use CraigPaul\Moneris\Traits\PreparableTrait;
+
 class Receipt
 {
-    use Preparable;
+    use PreparableTrait;
 
-    /**
-     * @var array
-     */
-    protected $data;
+    protected array $data;
 
     /**
      * Create a new Receipt instance.

@@ -3,6 +3,8 @@
 namespace CraigPaul\Moneris;
 
 use CraigPaul\Moneris\Interfaces\GatewayInterface;
+use CraigPaul\Moneris\Traits\GettableTrait;
+use CraigPaul\Moneris\Traits\SettableTrait;
 use CraigPaul\Moneris\Values\Crypt;
 use CraigPaul\Moneris\Values\Environment;
 use GuzzleHttp\Client;
@@ -22,7 +24,7 @@ use GuzzleHttp\Client;
  */
 class Gateway implements GatewayInterface
 {
-    use Gettable, Settable;
+    use GettableTrait, SettableTrait;
 
     protected array $avsCodes = ['A', 'B', 'D', 'M', 'P', 'W', 'X', 'Y', 'Z'];
     protected array $cvdCodes = ['M', 'Y', 'P', 'S', 'U'];

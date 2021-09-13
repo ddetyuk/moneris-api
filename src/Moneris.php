@@ -4,6 +4,7 @@ namespace CraigPaul\Moneris;
 
 use CraigPaul\Moneris\Interfaces\GatewayInterface;
 use CraigPaul\Moneris\Interfaces\MonerisInterface;
+use CraigPaul\Moneris\Traits\GettableTrait;
 use CraigPaul\Moneris\Values\Environment;
 
 /**
@@ -17,7 +18,7 @@ use CraigPaul\Moneris\Values\Environment;
  */
 class Moneris implements MonerisInterface
 {
-    use Gettable;
+    use GettableTrait;
 
     public function __construct(
         protected string $id,

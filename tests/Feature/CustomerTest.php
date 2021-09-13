@@ -6,6 +6,9 @@ use CraigPaul\Moneris\Customer;
 use CraigPaul\Moneris\Tests\TestCase;
 use InvalidArgumentException;
 
+/**
+ * @covers \CraigPaul\Moneris\Customer
+ */
 class CustomerTest extends TestCase
 {
     protected array $rawData = [
@@ -76,5 +79,9 @@ class CustomerTest extends TestCase
         $customer->data = $newData;
 
         $this->assertSame($newData, $customer->data);
+
+        $customer->foo = 'bar';
+
+        $this->assertSame('bar', $customer->data['foo']);
     }
 }

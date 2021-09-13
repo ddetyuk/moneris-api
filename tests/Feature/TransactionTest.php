@@ -6,6 +6,9 @@ use CraigPaul\Moneris\Interfaces\GatewayInterface;
 use CraigPaul\Moneris\Tests\TestCase;
 use CraigPaul\Moneris\Transaction;
 
+/**
+ * @covers \CraigPaul\Moneris\Transaction
+ */
 class TransactionTest extends TestCase
 {
     protected GatewayInterface $gateway;
@@ -30,18 +33,50 @@ class TransactionTest extends TestCase
     }
 
     /** @test */
-    public function it_can_access_properties_of_the_class()
+    public function getting_class_properties (): void
     {
         $params = $this->params;
         $params['pan'] = $params['credit_card'];
         unset($params['credit_card']);
 
-        $this->assertEquals($this->gateway, $this->transaction->gateway);
-        $this->assertEquals($params, $this->transaction->params);
+        $this->assertSame($this->gateway, $this->transaction->gateway);
+        $this->assertSame($params, $this->transaction->params);
     }
 
     /** @test */
-    public function it_converts_month_year_to_expdate()
+    public function getting_the_amount (): void
+    {
+        $tr = new Transaction($this->gateway(), $this->params);
+
+        $this->assertSame('1.00', $tr->amount());
+
+        $tr = new Transaction($this->gateway(), []);
+
+        $this->assertNull($tr->amount());
+    }
+
+    /** @test */
+    public function getting_the_transaction_number (): void
+    {
+        $tr = new Transaction($this->gateway(), []);
+
+        $this->assertNull($tr->number());
+    }
+
+    /** @test */
+    public function getting_the_order_number (): void
+    {
+        $tr = new Transaction($this->gateway(), $this->params);
+
+        $this->assertSame($this->params['order_id'], $tr->order());
+
+        $tr = new Transaction($this->gateway(), []);
+
+        $this->assertNull($tr->order());
+    }
+
+    /** @test */
+    public function formatting_expdate_from_month_and_year ():void
     {
         $params = array_merge($this->params, [
             'expiry_month' => '12',
@@ -52,36 +87,61 @@ class TransactionTest extends TestCase
 
         $transaction = new Transaction($this->gateway, $params);
 
-        $this->assertEquals('2012', $transaction->params['expdate']);
+        $this->assertSame('2012', $transaction->params['expdate']);
     }
 
     /** @test */
-    public function it_can_prepare_parameters_that_were_submitted_improperly()
+    public function whitespace_removal (): void
     {
-        $order = '   1234-567890';
-        $card = '4242 4242 4242 4242';
         $transaction = new Transaction($this->gateway, [
             'type' => 'purchase',
-            'order_id' => $order,
+            'order_id' => '   1234-567890',
             'amount' => '1.00',
-            'credit_card' => $card,
+            'credit_card' => '4242 4242 4242 4242',
             'expdate' => '2012',
         ]);
 
-        $this->assertEquals(trim($order), $transaction->params['order_id']);
-        $this->assertEquals(preg_replace('/\D/', '', $card), $transaction->params['pan']);
+        $this->assertSame(
+            '1234-567890',
+            $transaction->params['order_id'],
+        );
+
+        $this->assertSame(
+            '4242424242424242',
+            $transaction->params['pan'],
+        );
     }
 
     /** @test */
-    public function it_can_determine_that_a_proper_set_of_parameters_has_been_provided_to_the_transaction()
+    public function an_empty_key_is_removed (): void
+    {
+        $tr = new Transaction($this->gateway(), array_merge($this->params, [
+            'key' => ''
+        ]));
+
+        $this->assertFalse(isset($tr->params['key']));
+    }
+
+    /** @test */
+    public function description_key_is_renamed (): void
+    {
+        $tr = new Transaction($this->gateway(), array_merge($this->params, [
+            'description' => 'my description'
+        ]));
+
+        $this->assertFalse(isset($tr->params['description']));
+        $this->assertSame(
+            'my description',
+            $tr->params['dynamic_descriptor']
+        );
+    }
+
+    /** @test */
+    public function parameter_validation (): void
     {
         $this->assertTrue($this->transaction->valid());
         $this->assertFalse($this->transaction->invalid());
-    }
 
-    /** @test */
-    public function it_can_determine_that_an_improper_set_of_parameters_has_been_provided_to_the_transaction()
-    {
         $transaction = new Transaction($this->gateway);
 
         $this->assertFalse($transaction->valid());
@@ -89,7 +149,7 @@ class TransactionTest extends TestCase
     }
 
     /** @test */
-    public function it_can_transform_itself_to_an_xml_structure()
+    public function getting_xml (): void
     {
         $xml = $this->transaction->toXml();
         $xml = simplexml_load_string($xml);

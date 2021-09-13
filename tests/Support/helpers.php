@@ -7,7 +7,7 @@ use GuzzleHttp\Handler\MockHandler;
 
 if (!function_exists('dd')) {
     /**
-     * @param array ...$args
+     * @param mixed ...$args
      */
     function dd(...$args)
     {

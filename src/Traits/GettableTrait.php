@@ -1,10 +1,10 @@
 <?php
 
-namespace CraigPaul\Moneris;
+namespace CraigPaul\Moneris\Traits;
 
 use InvalidArgumentException;
 
-trait Gettable
+trait GettableTrait
 {
     /**
      * Retrieve a property off of the class.

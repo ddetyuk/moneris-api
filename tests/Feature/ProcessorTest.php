@@ -10,6 +10,9 @@ use CraigPaul\Moneris\Response;
 use CraigPaul\Moneris\Processor;
 use CraigPaul\Moneris\Transaction;
 
+/**
+ * @covers \CraigPaul\Moneris\Processor
+ */
 class ProcessorTest extends TestCase
 {
     protected GatewayInterface $gateway;

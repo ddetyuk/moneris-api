@@ -1,8 +1,8 @@
 <?php
 
-namespace CraigPaul\Moneris;
+namespace CraigPaul\Moneris\Traits;
 
-trait Preparable
+trait PreparableTrait
 {
     /**
      * Prepare the receipt data.

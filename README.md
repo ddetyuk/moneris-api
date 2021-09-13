@@ -23,47 +23,39 @@ Creating a new Moneris instance is quite easy and straightforward:
 
 ```php
 use CraigPaul\Moneris\Moneris;
+use CraigPaul\Moneris\Values\Environment;
 
-...
+$moneris = new Moneris(
+    id: 'store2',
+    token: 'yesguy',
+    environment: Environment::testing(),
+    avs: true, // defaults to false 
+    cvd: true, // defaults to false 
+    cof: true, // defaults to false 
+);
 
-$id = 'store1';
-$token = 'yesguy';
-
-// optional
-$params = [  
-  'environment' => Moneris::ENV_TESTING, // default: Moneris::ENV_LIVE
-  'avs' => true, // default: false
-  'cvd' => true, // default: false
-  'cof' => true, // default: false
-];
-
-$gateway = (new Moneris($id, $token, $params))->connect();
+$gateway = $moneris->connect();
 ```
+
+Or via the `connect()` static method:
 
 ```php
 use CraigPaul\Moneris\Moneris;
+use CraigPaul\Moneris\Values\Environment;
 
-...
-
-$id = 'store1';
-$token = 'yesguy';
-
-// optional
-$params = [  
-  'environment' => Moneris::ENV_TESTING, // default: Moneris::ENV_LIVE
-  'avs' => true, // default: false
-  'cvd' => true, // default: false
-  'cof' => true, // default: false
-];
-
-$gateway = Moneris::create($id, $token, $params);
+$gateway = Moneris::connect(
+    id: 'store2',
+    token: 'yesguy',
+    environment: Environment::testing(),
+    avs: true, // defaults to false 
+    cvd: true, // defaults to false 
+    cof: true, // defaults to false 
+);
 ```
-
-> **Note:** Please note that the Moneris store id and API token are always required to be passed to the Moneris constructor or static create method.
 
 ## Transactions
 
-To make a purchase, preauth a card, void a transaction, etc. is very straightforward once you have your Gateway instantiated ([see above](#instantiation)).
+Making a purchase, preauthorizing a card, voiding a transaction, etc., is straightforward once you have your Gateway instantiated ([see above](#instantiation)).
 
 ### Purchase
 
@@ -191,9 +183,9 @@ $params = [
 $response = $gateway->verify($params); // could be purchase, preauth, etc.
 ```
 
-> Note: When making an AVS or CVD secured transaction, even if AVS or CVD fails, you will still have to void the transaction (DAMN MONERIS!). There are two easy ways around this.
+> Note: When making an AVS or CVD secured transaction, even if AVS or CVD fails, you will still have to void the transaction. There are two easy ways around this.
 
-Verify the card first. Using this method, there is one additional caveat (let me repeat it again...DAMN MONERIS!). Your verification transaction and purchase transaction must have different `order_id` parameters. One such solution could be to prepend an specific prefix to the front of verification order ids.
+Verify the card first. Using this method, there is one additional caveat: Your verification transaction and purchase transaction must have different `order_id` parameters. One solution could be to prepend a specific prefix to the front of verification order ids.
 
 ```php
 $response = $gateway->verify($params);
@@ -243,10 +235,27 @@ $response = $vault->purchase($params); // could be purchase, preauth, etc.
 
 ## Vault
 
-The Moneris Vault allows you create and maintain credit card profiles on the Moneris servers instead of your own. To access the Vault, you will need to have your instantiated Gateway ([see above](#instantiation)).
+The Moneris Vault allows you to create and maintain credit card profiles on the Moneris servers instead of your own. To access the Vault, you will need to have your instantiated Gateway ([see above](#instantiation)).
 
 ```php
+use CraigPaul\Moneris\Moneris;
+
+$vault = Moneris::vault(
+    id: 'store2',
+    token: 'yesguy',
+    environment: Environment::testing(),
+    avs: true, // defaults to false 
+    cvd: true, // defaults to false 
+    cof: true, // defaults to false 
+);
+
+// Or if you already have the Gateway instantiated:
+
 $vault = $gateway->cards();
+
+// Or
+
+$value = $gateway->vault();
 ```
 
 ### Add a Card
@@ -436,18 +445,16 @@ The information available to you on the `Response` object is as follows:
 $errors = $response->errors;
 ```
 
-Any errors that might occur during your transaction will be returned in the following format for you. It is returned in this format to allow you to handle any translation logic in your own app by utilizing the unique `title` and `field` keys in each error.
+Any errors that might occur during your transaction will be available from the returned `ErrorList`. You can then filter through them and deal with them as required.
 
 ```php
+use CraigPaul\Moneris\Validation\Errors\ErrorList
+
 // The following example would be returned when you forget to set the `order_id` on your transaction. 
 
-$errors = [
-    [
-        'field' => 'order_id',
-        'code' => self::PARAMETER_NOT_SET, // 2
-        'title' => 'not_set'
-    ],
-];
+$errors = new Errorlist(
+    new \CraigPaul\Moneris\Validation\Errors\NotSetError('order_id')
+);
 ```
 
 #### Status
