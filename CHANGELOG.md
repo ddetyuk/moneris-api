@@ -1,8 +1,17 @@
 #Moneris API Changelog
 
-### 1.0.0 (2020-05-05)
-####Changed
-- Change `Vault::update(...)` signature to prevent PHP 8 from throwing an parameter order error
+### 2.0.0 (2021-09-13)
+#### Changed
+- You must now instantiate Moneris/Gateway/Vault with an instance of the Environment class.
+- AVS/CVD/COF are no longer passed in as an array of parameters, but as actual constructor parameters.
+- Errors on the Response are now an ErrorList as opposed to a bare array. There are 3 different flavours of errors.
+- Validation has been updated to use individual, tested classes.
+- Test coverage has been improved
+- Many tests have been updated
+
+### 1.0.0 (2020-09-08)
+#### Changed
+- Change `Vault::update(...)` signature to prevent PHP 8 from throwing a parameter order error
 - Require PHP 8
 - Require newer versions of PHPUnit, Mockery, and Faker
 - Update test `setUp` signature to match PHPUnit

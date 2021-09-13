@@ -1,54 +1,29 @@
 <?php
 
+namespace CraigPaul\Moneris\Tests\Feature;
+
+use CraigPaul\Moneris\Tests\Support\Stubs\VaultExpiringStub;
+use CraigPaul\Moneris\Tests\TestCase;
 use Faker\Factory as Faker;
 use CraigPaul\Moneris\Vault;
-use CraigPaul\Moneris\Moneris;
 use CraigPaul\Moneris\Customer;
 use CraigPaul\Moneris\Processor;
 use CraigPaul\Moneris\CreditCard;
 use CraigPaul\Moneris\Transaction;
+use function mock_handler;
 
+/**
+ * @covers \CraigPaul\Moneris\Vault
+ */
 class VaultTest extends TestCase
 {
-    /**
-     * The billing / shipping info for customer info requests.
-     *
-     * @var array
-     */
-    protected $billing;
+    protected array $billing;
+    protected CreditCard $card;
+    protected array $customer;
+    protected array $items;
+    protected array $params;
+    protected Vault $vault;
 
-    /**
-     * @var \CraigPaul\Moneris\CreditCard
-     */
-    protected $card;
-
-    /**
-     * The customer info for customer info requests.
-     *
-     * @var array
-     */
-    protected $customer;
-
-    /**
-     * @var array
-     */
-    protected $items;
-
-    /**
-     * @var array
-     */
-    protected $params;
-
-    /**
-     * @var \CraigPaul\Moneris\Vault
-     */
-    protected $vault;
-
-    /**
-     * Set up the test environment.
-     *
-     * @return void
-     */
     public function setUp (): void
     {
         parent::setUp();
@@ -100,7 +75,7 @@ class VaultTest extends TestCase
     }
 
     /** @test */
-    public function it_can_instantiate_via_the_constructor()
+    public function instantiating (): void
     {
         $vault = new Vault($this->id, $this->token, $this->environment);
 
@@ -111,7 +86,7 @@ class VaultTest extends TestCase
     }
 
     /** @test */
-    public function it_can_instantiate_via_a_static_create_method()
+    public function static_constructor (): void
     {
         $vault = Vault::create($this->id, $this->token, $this->environment);
 
@@ -122,7 +97,7 @@ class VaultTest extends TestCase
     }
 
     /** @test */
-    public function it_can_add_a_credit_card_to_the_moneris_vault_and_returns_a_data_key_for_storage()
+    public function adding_a_credit_card_and_getting_a_data_key (): void
     {
         $response = $this->vault->add($this->card);
         $receipt = $response->receipt();
@@ -216,7 +191,7 @@ class VaultTest extends TestCase
     /** @test */
     public function it_can_tokenize_a_previous_transaction_to_add_the_transactions_credit_card_in_the_moneris_vault_and_returns_a_data_key_for_storage()
     {
-        $gateway = Moneris::create($this->id, $this->token, ['environment' => Moneris::ENV_TESTING]);
+        $gateway = $this->gateway();
 
         $response = $gateway->purchase([
             'order_id' => uniqid('1234-56789', true),
@@ -328,8 +303,7 @@ class VaultTest extends TestCase
     /** @test */
     public function it_can_submit_a_cvd_secured_purchase_with_a_credit_card_stored_in_the_moneris_vault()
     {
-        $params = ['environment' => Moneris::ENV_TESTING, 'cvd' => true];
-        $vault = Moneris::create($this->id, $this->token, $params)->cards();
+        $vault = $this->gateway(cvd: true)->cards();
 
         $response = $this->vault->add($this->card);
         $key = $response->receipt()->read('key');
@@ -350,8 +324,7 @@ class VaultTest extends TestCase
     /** @test */
     public function it_can_submit_an_avs_secured_purchase_with_a_credit_card_stored_in_the_moneris_vault()
     {
-        $params = ['environment' => Moneris::ENV_TESTING, 'avs' => true];
-        $vault = Moneris::create($this->id, $this->token, $params)->cards();
+        $vault = $this->gateway(avs: true)->cards();
 
         $response = $this->vault->add($this->card);
         $key = $response->receipt()->read('key');
@@ -412,8 +385,7 @@ class VaultTest extends TestCase
     /** @test */
     public function it_can_submit_a_cvd_secured_pre_authorization_request_for_a_credit_card_stored_in_the_moneris_vault()
     {
-        $params = ['environment' => Moneris::ENV_TESTING, 'cvd' => true];
-        $vault = Moneris::create($this->id, $this->token, $params)->cards();
+        $vault = $this->gateway(cvd: true)->cards();
 
         $response = $this->vault->add($this->card);
         $key = $response->receipt()->read('key');
@@ -434,8 +406,7 @@ class VaultTest extends TestCase
     /** @test */
     public function it_can_submit_an_avs_secured_pre_authorization_request_for_a_credit_card_stored_in_the_moneris_vault()
     {
-        $params = ['environment' => Moneris::ENV_TESTING, 'avs' => true];
-        $vault = Moneris::create($this->id, $this->token, $params)->cards();
+        $vault = $this->gateway(avs: true)->cards();
 
         $response = $this->vault->add($this->card);
         $key = $response->receipt()->read('key');
@@ -476,8 +447,7 @@ class VaultTest extends TestCase
     /** @test */
     public function it_can_make_a_purchase_for_a_credit_card_stored_in_the_moneris_vault_using_credential_on_file()
     {
-        $params = ['environment' => Moneris::ENV_TESTING, 'cof' => true];
-        $gateway = Moneris::create($this->id, $this->token, $params);
+        $gateway = $this->gateway(cof: true);
         $vault = $gateway->cards();
 
         $preauth_params = [

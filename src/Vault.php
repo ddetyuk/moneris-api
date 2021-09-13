@@ -2,16 +2,12 @@
 
 namespace CraigPaul\Moneris;
 
-/**
- * CraigPaul\Moneris\Vault
- *
- * @property-read string $environment
- * @property-read string $id
- * @property-read string $token
- */
+use CraigPaul\Moneris\Traits\GettableTrait;
+use CraigPaul\Moneris\Values\Crypt;
+
 class Vault extends Gateway
 {
-    use Gettable;
+    use GettableTrait;
 
     /**
      * Create a new Vault instance.
@@ -20,24 +16,19 @@ class Vault extends Gateway
      * @param string $token
      * @param string $environment
      *
-     * @return void
+     * @return $this
      */
-    public function __construct($id = '', $token = '', $environment = '')
+    public static function create($id = '', $token = '', $environment = '')
     {
-        parent::__construct($id, $token, $environment);
+        return new static($id, $token, $environment);
     }
 
     /**
      * Add a credit card to the Vault.
-     *
-     * @param \CraigPaul\Moneris\CreditCard $card
-     * @param array $extra_params
-     *
-     * @return \CraigPaul\Moneris\Response
      */
-    public function add(CreditCard $card, $extra_params = [])
+    public function add (CreditCard $card, array $extraParams = []): Response
     {
-        $params = array_merge($extra_params, [
+        $params = array_merge($extraParams, [
             'type' => 'res_add_cc',
             'crypt_type' => $card->crypt,
             'pan' => $card->number,
@@ -56,20 +47,6 @@ class Vault extends Gateway
         $transaction = $this->transaction($params);
 
         return $this->process($transaction);
-    }
-
-    /**
-     * Create a new Vault instance.
-     *
-     * @param string $id
-     * @param string $token
-     * @param string $environment
-     *
-     * @return $this
-     */
-    public static function create($id = '', $token = '', $environment = '')
-    {
-        return new static($id, $token, $environment);
     }
 
     /**
@@ -127,12 +104,8 @@ class Vault extends Gateway
 
     /**
      * Pre-authorize a purchase.
-     *
-     * @param array $params
-     *
-     * @return \CraigPaul\Moneris\Response
      */
-    public function preauth(array $params = [])
+    public function preauth (array $params = []): Response
     {
         $params = array_merge($params, [
             'type' => 'res_preauth_cc',
@@ -146,12 +119,8 @@ class Vault extends Gateway
 
     /**
      * Make a purchase.
-     *
-     * @param array $params
-     *
-     * @return \CraigPaul\Moneris\Response
      */
-    public function purchase(array $params = [])
+    public function purchase (array $params = []): Response
     {
         $params = array_merge($params, [
             'type' => 'res_purchase_cc',
@@ -196,10 +165,10 @@ class Vault extends Gateway
     public function update (
         CreditCard $card,
         string $key = '',
-        array $extra_params = []
+        array $extraParams = []
     ): Response
     {
-        $params = array_merge($extra_params, [
+        $params = array_merge($extraParams, [
             'type' => 'res_update_cc',
             'data_key' => $key,
             'crypt_type' => $card->crypt,

@@ -2,14 +2,13 @@
 
 namespace CraigPaul\Moneris;
 
+use CraigPaul\Moneris\Traits\PreparableTrait;
+
 class Receipt
 {
-    use Preparable;
+    use PreparableTrait;
 
-    /**
-     * @var array
-     */
-    protected $data;
+    protected array $data;
 
     /**
      * Create a new Receipt instance.
@@ -51,13 +50,10 @@ class Receipt
 
     /**
      * Read an item from the receipt.
-     *
-     * @param string $value
-     *
-     * @return mixed|null
      */
-    public function read($value = '')
+    public function read (string $value = ''): mixed
     {
+        return $this->data[$value] ?? null;
         if (isset($this->data[$value]) && !is_null($this->data[$value])) {
             return $this->data[$value];
         }

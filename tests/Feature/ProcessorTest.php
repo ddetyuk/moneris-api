@@ -1,53 +1,31 @@
 <?php
 
+namespace CraigPaul\Moneris\Tests\Feature;
+
+use CraigPaul\Moneris\Interfaces\GatewayInterface;
+use CraigPaul\Moneris\Tests\TestCase;
 use GuzzleHttp\Client;
-use CraigPaul\Moneris\Crypt;
-use CraigPaul\Moneris\Moneris;
+use CraigPaul\Moneris\Values\Crypt;
 use CraigPaul\Moneris\Response;
 use CraigPaul\Moneris\Processor;
 use CraigPaul\Moneris\Transaction;
 
+/**
+ * @covers \CraigPaul\Moneris\Processor
+ */
 class ProcessorTest extends TestCase
 {
-    /**
-     * The Moneris gateway.
-     *
-     * @var \CraigPaul\Moneris\Gateway
-     */
-    protected $gateway;
+    protected GatewayInterface $gateway;
+    protected Processor $processor;
+    protected Transaction $transaction;
+    protected array $params;
 
-    /**
-     * The Moneris API parameters.
-     *
-     * @var array
-     */
-    protected $params;
-
-    /**
-     * The Processor instance.
-     *
-     * @var \CraigPaul\Moneris\Processor
-     */
-    protected $processor;
-
-    /**
-     * The Transaction instance.
-     *
-     * @var \CraigPaul\Moneris\Transaction
-     */
-    protected $transaction;
-
-    /**
-     * Set up the test environment.
-     *
-     * @return void
-     */
     public function setUp (): void
     {
         parent::setUp();
 
-        $this->params = ['environment' => Moneris::ENV_TESTING];
-        $this->gateway = Moneris::create($this->id, $this->token, $this->params);
+        $this->gateway = $this->gateway();
+
         $this->params = [
             'type' => 'purchase',
             'crypt_type' => Crypt::SSL_ENABLED_MERCHANT,
@@ -56,6 +34,7 @@ class ProcessorTest extends TestCase
             'credit_card' => $this->visa,
             'expdate' => '2012',
         ];
+
         $this->transaction = new Transaction($this->gateway, $this->params);
         $this->processor = new Processor(new Client());
     }
@@ -90,8 +69,7 @@ class ProcessorTest extends TestCase
     /** @test */
     public function it_can_submit_a_avs_secured_request_to_the_moneris_api()
     {
-        $params = ['environment' => Moneris::ENV_TESTING, 'avs' => true];
-        $gateway = Moneris::create($this->id, $this->token, $params);
+        $gateway = $this->gateway(avs: true);
         $response = $gateway->purchase([
             'order_id' => uniqid('1234-56789', true),
             'amount' => '1.00',
@@ -108,8 +86,7 @@ class ProcessorTest extends TestCase
     /** @test */
     public function it_can_submit_a_cvd_secured_request_to_the_moneris_api()
     {
-        $params = ['environment' => Moneris::ENV_TESTING, 'cvd' => true];
-        $gateway = Moneris::create($this->id, $this->token, $params);
+        $gateway = $this->gateway(cvd: true);
         $response = $gateway->purchase([
             'order_id' => uniqid('1234-56789', true),
             'amount' => '1.00',

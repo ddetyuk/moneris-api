@@ -15,6 +15,7 @@
     ],
     "require": {
         "php": "^8.0",
+        "ext-simplexml": "*",
         "guzzlehttp/guzzle": "^6.2"
     },
     "require-dev": {
@@ -30,16 +31,16 @@
         }
     },
     "autoload-dev": {
-        "classmap": [
-            "tests/stubs/",
-            "tests/TestCase.php"
-        ],
+        "psr-4": {
+            "CraigPaul\\Moneris\\Tests\\": "tests"
+        },
         "files": [
-            "tests/helpers.php"
+            "tests/Support/helpers.php"
         ]
     },
     "scripts": {
-        "test": "phpunit",
+        "test": "phpunit --configuration phpunit.xml --no-coverage",
+        "coverage": "phpunit --configuration phpunit.xml",
         "check-style": "phpcs -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src",
         "fix-style": "phpcbf -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src"
     },

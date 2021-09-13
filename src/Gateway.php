@@ -3,6 +3,10 @@
 namespace CraigPaul\Moneris;
 
 use CraigPaul\Moneris\Interfaces\GatewayInterface;
+use CraigPaul\Moneris\Traits\GettableTrait;
+use CraigPaul\Moneris\Traits\SettableTrait;
+use CraigPaul\Moneris\Values\Crypt;
+use CraigPaul\Moneris\Values\Environment;
 use GuzzleHttp\Client;
 
 /**
@@ -20,82 +24,20 @@ use GuzzleHttp\Client;
  */
 class Gateway implements GatewayInterface
 {
-    use Gettable, Settable;
+    use GettableTrait, SettableTrait;
 
-    /**
-     * Determine if we will use the Address Verification Service.
-     *
-     * @var bool
-     */
-    protected $avs = false;
+    protected array $avsCodes = ['A', 'B', 'D', 'M', 'P', 'W', 'X', 'Y', 'Z'];
+    protected array $cvdCodes = ['M', 'Y', 'P', 'S', 'U'];
 
-    /**
-     * @var array
-     */
-    protected $avsCodes = ['A', 'B', 'D', 'M', 'P', 'W', 'X', 'Y', 'Z'];
-
-    /**
-     * Determine if we will use the Card Validation Digits.
-     *
-     * @var bool
-     */
-    protected $cvd = false;
-
-    /**
-     * @var array
-     */
-    protected $cvdCodes = ['M', 'Y', 'P', 'S', 'U'];
-
-    /**
-     * The environment used for connecting to the Moneris API.
-     *
-     * @var string
-     */
-    protected $environment;
-
-    /**
-     * The Moneris Store ID.
-     *
-     * @var string
-     */
-    protected $id;
-
-    /**
-     * The Moneris API Token.
-     *
-     * @var string
-     */
-    protected $token;
-
-    /**
-     * The current transaction.
-     *
-     * @var \CraigPaul\Moneris\Transaction
-     */
-    protected $transaction;
-
-    /**
-     * Determine if we will use Credential On File.
-     *
-     * @var bool
-     */
-    protected $cof = false;
-
-    /**
-     * Create a new Moneris instance.
-     *
-     * @param string $id
-     * @param string $token
-     * @param string $environment
-     *
-     * @return void
-     */
-    public function __construct($id = '', $token = '', $environment = '')
-    {
-        $this->id = $id;
-        $this->token = $token;
-        $this->environment = $environment;
-    }
+    public function __construct (
+        protected string $id,
+        protected string $token,
+        protected Environment $environment,
+        protected bool $avs = false,
+        protected bool $cvd = false,
+        protected bool $cof = false,
+        protected Transaction|null $transaction = null,
+    ) {}
 
     /**
      * Capture a pre-authorized transaction.
@@ -106,19 +48,27 @@ class Gateway implements GatewayInterface
      *
      * @return \CraigPaul\Moneris\Response
      */
-    public function capture($transaction, $order = null, $amount = null)
+    public function capture(
+        Transaction|string $transaction,
+        string|null $order = null,
+        mixed $amount = null
+    ): Response
     {
+        $transactionNumber = $transaction;
+
         if ($transaction instanceof Transaction) {
             $order = $transaction->order();
-            $amount = !is_null($amount) ? $amount : $transaction->amount();
-            $transaction = $transaction->number();
+            $amount = is_null($amount)
+                ? $transaction->amount()
+                : $amount;
+            $transactionNumber = $transaction->number();
         }
 
         $params = [
             'type' => 'completion',
             'crypt_type' => Crypt::SSL_ENABLED_MERCHANT,
             'comp_amount' => $amount,
-            'txn_number' => $transaction,
+            'txn_number' => $transactionNumber,
             'order_id' => $order,
         ];
 
@@ -128,37 +78,32 @@ class Gateway implements GatewayInterface
     }
 
     /**
-     * Create a new Vault instance.
-     *
-     * @return \CraigPaul\Moneris\Vault
+     * Alias for self::vault().
      */
-    public function cards()
+    public function cards (): Vault
     {
-        $vault = new Vault($this->id, $this->token, $this->environment);
+        return $this->vault();
+    }
 
-        if (isset($this->avs)) {
-            $vault->avs = boolval($this->avs);
-        }
-
-        if (isset($this->cvd)) {
-            $vault->cvd = boolval($this->cvd);
-        }
-
-        if (isset($this->cof)) {
-            $vault->cof = boolval($this->cof);
-        }
-
-        return $vault;
+    /**
+     * Create a new Vault instance.
+     */
+    public function vault (): Vault
+    {
+        return new Vault(
+            $this->id,
+            $this->token,
+            $this->environment,
+            $this->avs,
+            $this->cvd,
+            $this->cof,
+        );
     }
 
     /**
      * Pre-authorize a purchase.
-     *
-     * @param array $params
-     *
-     * @return \CraigPaul\Moneris\Response
      */
-    public function preauth(array $params = [])
+    public function preauth (array $params = []): Response
     {
         $params = array_merge($params, [
             'type' => 'preauth',
@@ -172,12 +117,8 @@ class Gateway implements GatewayInterface
 
     /**
      * Make a purchase.
-     *
-     * @param array $params
-     *
-     * @return \CraigPaul\Moneris\Response
      */
-    public function purchase(array $params = [])
+    public function purchase (array $params = []): Response
     {
         $params = array_merge($params, [
             'type' => 'purchase',
@@ -190,33 +131,19 @@ class Gateway implements GatewayInterface
     }
 
     /**
-     * Process a transaction through the Moneris API.
-     *
-     * @param \CraigPaul\Moneris\Transaction $transaction
-     *
-     * @return \CraigPaul\Moneris\Response
-     */
-    protected function process(Transaction $transaction)
-    {
-        $processor = new Processor(new Client());
-
-        return $processor->process($transaction);
-    }
-
-    /**
      * Refund a transaction.
-     *
-     * @param \CraigPaul\Moneris\Transaction|string $transaction
-     * @param string|null $order
-     * @param mixed|null $amount
-     *
-     * @return \CraigPaul\Moneris\Response
      */
-    public function refund($transaction, $order = null, $amount = null)
+    public function refund (
+        Transaction|string $transaction,
+        string|null $order = null,
+        mixed $amount = null
+    ): Response
     {
         if ($transaction instanceof Transaction) {
             $order = $transaction->order();
-            $amount = !is_null($amount) ? $amount : $transaction->amount();
+            $amount = is_null($amount)
+                ? $transaction->amount()
+                : $amount;
             $transaction = $transaction->number();
         }
 
@@ -234,29 +161,9 @@ class Gateway implements GatewayInterface
     }
 
     /**
-     * Get or create a new Transaction instance.
-     *
-     * @param array|null $params
-     *
-     * @return \CraigPaul\Moneris\Transaction
-     */
-    protected function transaction(array $params = null)
-    {
-        if (is_null($this->transaction) || !is_null($params)) {
-            return $this->transaction = new Transaction($this, $params);
-        }
-
-        return $this->transaction;
-    }
-
-    /**
      * Validate CVD and/or AVS prior to attempting a purchase.
-     *
-     * @param array $params
-     *
-     * @return \CraigPaul\Moneris\Response
      */
-    public function verify(array $params = [])
+    public function verify (array $params = []): Response
     {
         $params = array_merge($params, [
             'type' => 'card_verification',
@@ -270,13 +177,11 @@ class Gateway implements GatewayInterface
 
     /**
      * Void a transaction.
-     *
-     * @param \CraigPaul\Moneris\Transaction|string $transaction
-     * @param string|null $order
-     *
-     * @return \CraigPaul\Moneris\Response
      */
-    public function void($transaction, $order = null)
+    public function void(
+        Transaction|string $transaction,
+        string|null $order = null
+    ): Response
     {
         if ($transaction instanceof Transaction) {
             $order = $transaction->order();
@@ -293,5 +198,25 @@ class Gateway implements GatewayInterface
         $transaction = $this->transaction($params);
 
         return $this->process($transaction);
+    }
+
+    /**
+     * Process a transaction through the Moneris API.
+     */
+    protected function process (Transaction $transaction): Response
+    {
+        $processor = new Processor(new Client());
+
+        return $processor->process($transaction);
+    }
+
+    /**
+     * Get or create a new Transaction instance.
+     */
+    protected function transaction (array|null $params = null): Transaction
+    {
+        return !$this->transaction || is_array($params)
+            ? $this->transaction = new Transaction($this, $params)
+            : $this->transaction;
     }
 }

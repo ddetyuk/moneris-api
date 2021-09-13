@@ -2,21 +2,18 @@
 
 namespace CraigPaul\Moneris;
 
+use CraigPaul\Moneris\Values\Environment;
 use GuzzleHttp\Client;
+use SimpleXMLElement;
 
 class Processor
 {
-    /**
-     * @var \GuzzleHttp\Client
-     */
-    protected $client;
+    protected Client $client;
 
     /**
      * API configuration.
-     *
-     * @var array
      */
-    protected $config = [
+    protected array $config = [
         'protocol' => 'https',
         'host' => 'esqa.moneris.com',
         'port' => '443',
@@ -27,31 +24,23 @@ class Processor
 
     /**
      * Global error response to maintain consistency.
-     *
-     * @var string
      */
-    protected $error = "<?xml version=\"1.0\"?><response><receipt><ReceiptId>Global Error Receipt</ReceiptId><ReferenceNum>null</ReferenceNum><ResponseCode>null</ResponseCode><ISO>null</ISO> <AuthCode>null</AuthCode><TransTime>null</TransTime><TransDate>null</TransDate><TransType>null</TransType><Complete>false</Complete><Message>null</Message><TransAmount>null</TransAmount><CardType>null</CardType><TransID>null</TransID><TimedOut>null</TimedOut></receipt></response>";
+    protected string $error = "<?xml version=\"1.0\"?><response><receipt><ReceiptId>Global Error Receipt</ReceiptId><ReferenceNum>null</ReferenceNum><ResponseCode>null</ResponseCode><ISO>null</ISO> <AuthCode>null</AuthCode><TransTime>null</TransTime><TransDate>null</TransDate><TransType>null</TransType><Complete>false</Complete><Message>null</Message><TransAmount>null</TransAmount><CardType>null</CardType><TransID>null</TransID><TimedOut>null</TimedOut></receipt></response>";
 
-    /**
-     * Create a new Processor instance.
-     *
-     * @param \GuzzleHttp\Client $client
-     */
-    public function __construct(Client $client)
+    public function __construct (Client $client)
     {
         $this->client = $client;
     }
 
     /**
      * Retrieve the API configuration.
-     *
-     * @param string $environment
-     *
-     * @return array
      */
-    public function config($environment = '')
+    public function config (Environment|null $environment = null): array
     {
-        if ($environment === Moneris::ENV_LIVE) {
+        /**
+         * @codeCoverageIgnore
+         */
+        if ($environment && $environment->isLive()) {
             $this->config['host'] = 'www3.moneris.com';
         }
 
@@ -59,14 +48,10 @@ class Processor
     }
 
     /**
-     * Determine if the request is valid. If so, process the
-     * transaction via the Moneris API.
-     *
-     * @param \CraigPaul\Moneris\Transaction $transaction
-     *
-     * @return \CraigPaul\Moneris\Response
+     * Determine if the request is valid. If so, process the transaction via
+     * the Moneris API.
      */
-    public function process(Transaction $transaction)
+    public function process (Transaction $transaction): Response
     {
         if ($transaction->invalid()) {
             $response = new Response($transaction);
@@ -84,10 +69,8 @@ class Processor
 
     /**
      * Parse the global error response stub.
-     *
-     * @return \SimpleXMLElement
      */
-    protected function error()
+    protected function error (): SimpleXMLElement
     {
         return simplexml_load_string($this->error);
     }
@@ -101,7 +84,7 @@ class Processor
      *
      * @return string
      */
-    protected function send(array $config, $url = '', $xml = '')
+    protected function send (array $config, $url = '', $xml = ''): string
     {
         $response = $this->client->post($url, [
             'body' => $xml,
@@ -119,9 +102,9 @@ class Processor
      *
      * @param \CraigPaul\Moneris\Transaction $transaction
      *
-     * @return \SimpleXMLElement|string
+     * @return \SimpleXMLElement
      */
-    protected function submit(Transaction $transaction)
+    protected function submit (Transaction $transaction)
     {
         $config = $this->config($transaction->gateway->environment);
 
