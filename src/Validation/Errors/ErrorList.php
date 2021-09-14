@@ -38,6 +38,11 @@ class ErrorList implements IteratorAggregate, Countable
         return ErrorList::of(...$this->errors)->push(...$errors->all());
     }
 
+    public function has (): bool
+    {
+        return $this->count() > 0;
+    }
+
     public function get (int $index): ErrorInterface
     {
         return $this->errors[$index];

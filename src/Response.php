@@ -75,7 +75,10 @@ class Response
      *
      * @param \CraigPaul\Moneris\Transaction $transaction
      */
-    public function __construct(protected Transaction $transaction) {}
+    public function __construct(protected Transaction $transaction)
+    {
+        $this->errors = new ErrorList();
+    }
 
     public static function create (Transaction $transaction): self
     {
