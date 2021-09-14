@@ -12,14 +12,15 @@ use CraigPaul\Moneris\Validation\Errors\ErrorList;
 class ErrorListTest extends TestCase
 {
     /** @test */
-    public function pushing_an_error_onto_the_stack (): void
+    public function pushing_errors_onto_the_stack (): void
     {
-        $list = new ErrorList(new ErrorStub());
+        $list = new ErrorList();
 
-        $this->assertSame(1, $list->count());
+        $this->assertFalse($list->has());
 
-        $list->push(new ErrorStub());
+        $list->push(new ErrorStub(), new ErrorStub());
 
+        $this->assertTrue($list->has());
         $this->assertSame(2, $list->count());
     }
 
