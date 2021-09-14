@@ -13,4 +13,13 @@ class EmptyError implements ErrorInterface
     {
         return 'No parameters were provided.';
     }
+
+    public function jsonSerialize (): array
+    {
+        return [
+            'code' => $this->code(),
+            'message' => $this->message(),
+            'field' => null,
+        ];
+    }
 }

@@ -2,7 +2,9 @@
 
 namespace CraigPaul\Moneris\Validation\Errors;
 
-interface ErrorInterface
+use JsonSerializable;
+
+interface ErrorInterface extends JsonSerializable
 {
     public function code (): int;
 

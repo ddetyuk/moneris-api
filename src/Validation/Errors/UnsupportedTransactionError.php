@@ -13,4 +13,13 @@ class UnsupportedTransactionError implements ErrorInterface
     {
         return 'Unsupported transaction type.';
     }
+
+    public function jsonSerialize (): array
+    {
+        return [
+            'code' => $this->code(),
+            'message' => $this->message(),
+            'field' => null,
+        ];
+    }
 }

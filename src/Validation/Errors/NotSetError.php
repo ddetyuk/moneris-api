@@ -20,4 +20,13 @@ class NotSetError implements ErrorInterface
     {
         return $this->field;
     }
+
+    public function jsonSerialize (): array
+    {
+        return [
+            'code' => $this->code(),
+            'message' => $this->message(),
+            'field' => $this->field(),
+        ];
+    }
 }
