@@ -15,4 +15,13 @@ class ErrorStub implements ErrorInterface
     {
         return 'an error message?';
     }
+
+    public function jsonSerialize (): array
+    {
+        return [
+            'code' => $this->code(),
+            'message' => $this->message(),
+            'field' => null,
+        ];
+    }
 }

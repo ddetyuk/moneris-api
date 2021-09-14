@@ -4,7 +4,10 @@ namespace CraigPaul\Moneris\Tests\Feature\Validation\Errors;
 
 use CraigPaul\Moneris\Tests\Support\Stubs\ErrorStub;
 use CraigPaul\Moneris\Tests\TestCase;
+use CraigPaul\Moneris\Validation\Errors\EmptyError;
 use CraigPaul\Moneris\Validation\Errors\ErrorList;
+use CraigPaul\Moneris\Validation\Errors\NotSetError;
+use CraigPaul\Moneris\Validation\Errors\UnsupportedTransactionError;
 
 /**
  * @covers \CraigPaul\Moneris\Validation\Errors\ErrorList
@@ -69,5 +72,37 @@ class ErrorListTest extends TestCase
         foreach ($list as $key => $value) {
             $this->assertSame($errors[$key], $value);
         }
+    }
+
+    /** @test */
+    public function getting_an_array_representation (): void
+    {
+        $errors = new ErrorList(
+            new NotSetError('my-field'),
+            new EmptyError(),
+            new UnsupportedTransactionError(),
+        );
+
+        $json = json_decode(json_encode($errors), true);
+
+        $expected = [
+            [
+                'code' => 2,
+                'message' => 'Required field "my-field" not set.',
+                'field' => 'my-field'
+            ],
+            [
+                'code' => 1,
+                'message' => 'No parameters were provided.',
+                'field' => null,
+            ],
+            [
+                'code' => 3,
+                'message' => 'Unsupported transaction type.',
+                'field' => null,
+            ],
+        ];
+
+        $this->assertSame($expected, $json);
     }
 }

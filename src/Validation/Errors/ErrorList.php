@@ -5,9 +5,10 @@ namespace CraigPaul\Moneris\Validation\Errors;
 use ArrayIterator;
 use Countable;
 use IteratorAggregate;
+use JsonSerializable;
 use Traversable;
 
-class ErrorList implements IteratorAggregate, Countable
+class ErrorList implements IteratorAggregate, Countable, JsonSerializable
 {
     /** @var \CraigPaul\Moneris\Validation\Errors\ErrorInterface[] */
     private array $errors;
@@ -61,5 +62,10 @@ class ErrorList implements IteratorAggregate, Countable
     public function count (): int
     {
         return count($this->errors);
+    }
+
+    public function jsonSerialize ()
+    {
+        return $this->errors;
     }
 }

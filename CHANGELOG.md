@@ -1,5 +1,9 @@
 #Moneris API Changelog
 
+### 2.0.2 (2021-09014)
+#### Changed
+- `ErrorList` and `ErrorInterface` now implement `JsonSerializable`.
+
 ### 2.0.0 (2021-09-13)
 #### Changed
 - You must now instantiate Moneris/Gateway/Vault with an instance of the Environment class.
