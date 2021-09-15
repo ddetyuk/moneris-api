@@ -172,9 +172,9 @@ class Response
         return $status;
     }
 
-    protected function convertReceiptMessageToStatus (Receipt $receipt): int
+    protected function convertReceiptMessageToStatus (Receipt $receipt): int|null
     {
-        $message = (string)$receipt->read('message');
+        $message = (string) $receipt->read('message');
         $status = null;
 
         if (preg_match('/invalid pan/i', $message)) {

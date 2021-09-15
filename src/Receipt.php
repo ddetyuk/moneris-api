@@ -39,7 +39,7 @@ class Receipt
         ]);
     }
 
-    public function successful()
+    public function successful (): bool
     {
         $complete = $this->read('complete');
         $valid_code = $this->read('code') !== 'null';
@@ -54,21 +54,12 @@ class Receipt
     public function read (string $value = ''): mixed
     {
         return $this->data[$value] ?? null;
-        if (isset($this->data[$value]) && !is_null($this->data[$value])) {
-            return $this->data[$value];
-        }
-
-        return null;
     }
 
     /**
      * Format the resolved data from the Moneris API.
-     *
-     * @param array $data
-     *
-     * @return array
      */
-    private function setData(array $data)
+    private function setData (array $data): array
     {
         return [
             'customer_id' => isset($data['cust_id']) ? (is_string($data['cust_id']) ? $data['cust_id'] : $data['cust_id']->__toString()) : null,
