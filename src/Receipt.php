@@ -3,8 +3,9 @@
 namespace CraigPaul\Moneris;
 
 use CraigPaul\Moneris\Traits\PreparableTrait;
+use JsonSerializable;
 
-class Receipt
+class Receipt implements JsonSerializable
 {
     use PreparableTrait;
 
@@ -57,7 +58,18 @@ class Receipt
     }
 
     /**
-     * Format the resolved data from the Moneris API.
+     * Get the entire data array.
+     */
+    public function getData (): array
+    {
+        return $this->data;
+    }
+
+    /**
+     * Format the resolved data from the Moneris API. This method is called
+     * in the PreparableTrait.
+     *
+     * @noinspection PhpUnusedPrivateMethodInspection
      */
     private function setData (array $data): array
     {
@@ -74,5 +86,10 @@ class Receipt
                 'year' => isset($data['expdate']) ? substr($data['expdate'], 0, 2) : null,
             ],
         ];
+    }
+
+    public function jsonSerialize (): array
+    {
+        return $this->getData();
     }
 }

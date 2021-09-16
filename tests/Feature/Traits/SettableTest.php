@@ -18,7 +18,7 @@ class SettableTest extends TestCase
         {
             use SettableTrait;
 
-            protected mixed $myProp = null;
+            private mixed $myProp = null;
 
             public function myProp (): mixed
             {
