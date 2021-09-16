@@ -7,6 +7,7 @@ trait PreparableTrait
     /**
      * Prepare the receipt data.
      * @param $data
+     * @param array $params
      * @return array
      */
     protected function prepare ($data, array $params): array
