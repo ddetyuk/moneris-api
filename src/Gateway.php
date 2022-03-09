@@ -48,7 +48,7 @@ class Gateway implements GatewayInterface
      *
      * @return \CraigPaul\Moneris\Response
      */
-    public function capture(
+    public function capture (
         Transaction|string $transaction,
         string|null $order = null,
         mixed $amount = null
@@ -58,9 +58,11 @@ class Gateway implements GatewayInterface
 
         if ($transaction instanceof Transaction) {
             $order = $transaction->order();
+
             $amount = is_null($amount)
                 ? $transaction->amount()
                 : $amount;
+
             $transactionNumber = $transaction->number();
         }
 

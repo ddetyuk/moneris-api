@@ -4,7 +4,9 @@ namespace CraigPaul\Moneris;
 
 use CraigPaul\Moneris\Traits\GettableTrait;
 use CraigPaul\Moneris\Traits\SettableTrait;
-use CraigPaul\Moneris\Validation\Errors\ErrorList;/**
+use CraigPaul\Moneris\Validation\Errors\ErrorList;
+
+/**
  * CraigPaul\Moneris\Response
  * @property array $errors
  * @property bool $failedAvs
@@ -61,7 +63,7 @@ class Response
     protected bool $failedCvd = false;
 
     /**
-     * The status code.
+     * The status code.s
      */
     protected int|null $status = null;
 
