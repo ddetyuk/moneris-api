@@ -10,6 +10,7 @@ use CraigPaul\Moneris\Customer;
 use CraigPaul\Moneris\Processor;
 use CraigPaul\Moneris\CreditCard;
 use CraigPaul\Moneris\Transaction;
+
 use function mock_handler;
 
 /**
@@ -24,7 +25,7 @@ class VaultTest extends TestCase
     protected array $params;
     protected Vault $vault;
 
-    public function setUp (): void
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -75,7 +76,7 @@ class VaultTest extends TestCase
     }
 
     /** @test */
-    public function instantiating (): void
+    public function instantiating(): void
     {
         $vault = new Vault($this->id, $this->token, $this->environment);
 
@@ -86,7 +87,7 @@ class VaultTest extends TestCase
     }
 
     /** @test */
-    public function static_constructor (): void
+    public function static_constructor(): void
     {
         $vault = Vault::create($this->id, $this->token, $this->environment);
 
@@ -97,7 +98,7 @@ class VaultTest extends TestCase
     }
 
     /** @test */
-    public function adding_a_credit_card_and_getting_a_data_key (): void
+    public function adding_a_credit_card_and_getting_a_data_key(): void
     {
         $response = $this->vault->add($this->card);
         $receipt = $response->receipt();

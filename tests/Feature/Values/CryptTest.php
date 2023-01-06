@@ -9,7 +9,7 @@ use InvalidArgumentException;
 class CryptTest extends TestCase
 {
     /** @test */
-    public function instantiating_with_valid_type (): void
+    public function instantiating_with_valid_type(): void
     {
         $crypt = new Crypt(1);
 
@@ -17,7 +17,7 @@ class CryptTest extends TestCase
     }
 
     /** @test */
-    public function failing_with_invalid_type (): void
+    public function failing_with_invalid_type(): void
     {
         $this->expectException(InvalidArgumentException::class);
 
@@ -25,7 +25,7 @@ class CryptTest extends TestCase
     }
 
     /** @test */
-    public function using_the_static_constructor (): void
+    public function using_the_static_constructor(): void
     {
         $crypt = Crypt::sslEnableMerchant();
 
@@ -33,7 +33,7 @@ class CryptTest extends TestCase
     }
 
     /** @test */
-    public function casting_to_string (): void
+    public function casting_to_string(): void
     {
         $crypt = Crypt::sslEnableMerchant();
 

@@ -33,7 +33,7 @@ class GatewayTest extends TestCase
      *
      * @return void
      */
-    public function setUp (): void
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -71,7 +71,7 @@ class GatewayTest extends TestCase
     }
 
     /** @test */
-    public function instantiation (): void
+    public function instantiation(): void
     {
         $gateway = $this->gateway();
 
@@ -82,7 +82,7 @@ class GatewayTest extends TestCase
     }
 
     /** @test */
-    public function making_a_purchase_and_getting_a_response (): void
+    public function making_a_purchase_and_getting_a_response(): void
     {
         $response = $this->gateway()->purchase($this->params);
 
@@ -91,7 +91,7 @@ class GatewayTest extends TestCase
     }
 
     /** @test */
-    public function making_a_purchase_with_customer_info (): void
+    public function making_a_purchase_with_customer_info(): void
     {
         $params = array_merge($this->params, [
             'cust_id' => uniqid('customer-', true),
@@ -108,7 +108,7 @@ class GatewayTest extends TestCase
     }
 
     /** @test */
-    public function making_a_purchase_with_cvd (): void
+    public function making_a_purchase_with_cvd(): void
     {
         $response = $this->gateway(cvd: true)->purchase([
             'cvd' => '111',
@@ -123,7 +123,7 @@ class GatewayTest extends TestCase
     }
 
     /** @test */
-    public function making_a_purchase_with_avs (): void
+    public function making_a_purchase_with_avs(): void
     {
         $response = $this->gateway(avs: true)->purchase([
             'avs_street_number' => '123',
@@ -140,7 +140,7 @@ class GatewayTest extends TestCase
     }
 
     /** @test */
-    public function preauthorizing_a_purchase (): void
+    public function preauthorizing_a_purchase(): void
     {
         $response = $this->gateway()->preauth($this->params);
 
@@ -149,7 +149,7 @@ class GatewayTest extends TestCase
     }
 
     /** @test */
-    public function preauth_with_customer_information (): void
+    public function preauth_with_customer_information(): void
     {
         $params = array_merge($this->params, [
             'cust_id' => uniqid('customer-', true),
@@ -165,7 +165,7 @@ class GatewayTest extends TestCase
     }
 
     /** @test */
-    public function preauth_with_cvd (): void
+    public function preauth_with_cvd(): void
     {
         $response = $this->gateway(cvd: true)->preauth([
             'cvd' => '111',
@@ -179,7 +179,7 @@ class GatewayTest extends TestCase
     }
 
     /** @test */
-    public function preauth_with_avs (): void
+    public function preauth_with_avs(): void
     {
         $response = $this->gateway(avs: true)->preauth([
             'avs_street_number' => '123',
@@ -195,7 +195,7 @@ class GatewayTest extends TestCase
     }
 
     /** @test */
-    public function verifying_a_card (): void
+    public function verifying_a_card(): void
     {
         $response = $this->gateway()->verify($this->params);
 
@@ -203,7 +203,7 @@ class GatewayTest extends TestCase
     }
 
     /** @test */
-    public function verifying_a_cvd_secured_card (): void
+    public function verifying_a_cvd_secured_card(): void
     {
         $response = $this->gateway(cvd: true)->verify([
             'cvd' => '111',
@@ -217,7 +217,7 @@ class GatewayTest extends TestCase
     }
 
     /** @test */
-    public function verifying_an_avs_secured_card (): void
+    public function verifying_an_avs_secured_card(): void
     {
         $response = $this->gateway(avs: true)->verify([
             'avs_street_number' => '123',
@@ -233,7 +233,7 @@ class GatewayTest extends TestCase
     }
 
     /** @test */
-    public function voiding_a_purchase (): void
+    public function voiding_a_purchase(): void
     {
         $purchaseResponse = $this->gateway()->purchase($this->params);
         $voidResponse = $this->gateway()->void(
@@ -245,7 +245,7 @@ class GatewayTest extends TestCase
     }
 
     /** @test */
-    public function refunding_a_purchase (): void
+    public function refunding_a_purchase(): void
     {
         $purchaseResponse = $this->gateway()->purchase($this->params);
         $refundResponse = $this->gateway()->refund(
@@ -257,7 +257,7 @@ class GatewayTest extends TestCase
     }
 
     /** @test */
-    public function refunding_with_a_different_amount (): void
+    public function refunding_with_a_different_amount(): void
     {
         $amount = '0.90';
 
@@ -276,7 +276,7 @@ class GatewayTest extends TestCase
     }
 
     /** @test */
-    public function capturing_a_preauthorized_transaction (): void
+    public function capturing_a_preauthorized_transaction(): void
     {
         $preauthResponse = $this->gateway()->preauth($this->params);
         $captureResponse = $this->gateway()->capture(
@@ -288,7 +288,7 @@ class GatewayTest extends TestCase
     }
 
     /** @test */
-    public function capturing_with_a_different_amount (): void
+    public function capturing_with_a_different_amount(): void
     {
         $amount = '0.90';
 
@@ -307,7 +307,7 @@ class GatewayTest extends TestCase
     }
 
     /** @test */
-    public function getting_the_vault (): void
+    public function getting_the_vault(): void
     {
         $vault = $this->gateway()->cards();
 

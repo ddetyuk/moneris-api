@@ -11,7 +11,7 @@ interface GatewayInterface
     /**
      * Capture a pre-authorized transaction.
      */
-    public function capture (
+    public function capture(
         Transaction|string $transaction,
         string|null $order = null,
         mixed $amount = null
@@ -20,22 +20,22 @@ interface GatewayInterface
     /**
      * Create a new Vault instance.
      */
-    public function cards (): Vault;
+    public function cards(): Vault;
 
     /**
      * Pre-authorize a purchase.
      */
-    public function preauth (array $params = []): Response;
+    public function preauth(array $params = []): Response;
 
     /**
      * Make a purchase.
      */
-    public function purchase (array $params = []): Response;
+    public function purchase(array $params = []): Response;
 
     /**
      * Refund a transaction.
      */
-    public function refund (
+    public function refund(
         Transaction|string $transaction,
         string|null $order = null,
         mixed $amount = null
@@ -44,12 +44,12 @@ interface GatewayInterface
     /**
      * Validate CVD and/or AVS prior to attempting a purchase.
      */
-    public function verify (array $params = []): Response;
+    public function verify(array $params = []): Response;
 
     /**
      * Void a transaction.
      */
-    public function void (
+    public function void(
         Transaction|string $transaction,
         string|null $order = null
     ): Response;

@@ -9,7 +9,7 @@ class VaultExpiringStub
      * @param array $cards
      * @return string
      */
-    public function render (array $cards)
+    public function render(array $cards)
     {
         $response = '<?xml version="1.0"?><response><receipt>';
 

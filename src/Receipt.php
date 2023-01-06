@@ -40,7 +40,7 @@ class Receipt implements JsonSerializable
         ]);
     }
 
-    public function successful (): bool
+    public function successful(): bool
     {
         $complete = $this->read('complete');
         $valid_code = $this->read('code') !== 'null';
@@ -52,7 +52,7 @@ class Receipt implements JsonSerializable
     /**
      * Read an item from the receipt.
      */
-    public function read (string $value = ''): mixed
+    public function read(string $value = ''): mixed
     {
         return $this->data[$value] ?? null;
     }
@@ -60,7 +60,7 @@ class Receipt implements JsonSerializable
     /**
      * Get the entire data array.
      */
-    public function getData (): array
+    public function getData(): array
     {
         return $this->data;
     }
@@ -71,7 +71,7 @@ class Receipt implements JsonSerializable
      *
      * @noinspection PhpUnusedPrivateMethodInspection
      */
-    private function setData (array $data): array
+    private function setData(array $data): array
     {
         return [
             'customer_id' => isset($data['cust_id']) ? (is_string($data['cust_id']) ? $data['cust_id'] : $data['cust_id']->__toString()) : null,
@@ -88,7 +88,7 @@ class Receipt implements JsonSerializable
         ];
     }
 
-    public function jsonSerialize (): array
+    public function jsonSerialize(): array
     {
         return $this->getData();
     }

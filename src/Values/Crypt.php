@@ -20,7 +20,7 @@ final class Crypt implements Stringable
 
     private int $crypt;
 
-    public function __construct (int $crypt)
+    public function __construct(int $crypt)
     {
         $validValues = array_values(
             (new ReflectionClass($this))->getConstants()
@@ -31,17 +31,17 @@ final class Crypt implements Stringable
             : throw new InvalidArgumentException('Invalid Crypt type.');
     }
 
-    public static function sslEnableMerchant (): self
+    public static function sslEnableMerchant(): self
     {
         return new self(self::SSL_ENABLED_MERCHANT);
     }
 
-    public function value (): int
+    public function value(): int
     {
         return $this->crypt;
     }
 
-    public function __toString (): string
+    public function __toString(): string
     {
         return (string) $this->value();
     }

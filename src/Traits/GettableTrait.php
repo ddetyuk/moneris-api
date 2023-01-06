@@ -10,7 +10,7 @@ trait GettableTrait
      * Retrieve a property off of the class.
      * @throws \InvalidArgumentException
      */
-    public function __get (string $property): mixed
+    public function __get(string $property): mixed
     {
         if (property_exists($this, $property)) {
             return $this->$property;

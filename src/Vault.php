@@ -26,7 +26,7 @@ class Vault extends Gateway
     /**
      * Add a credit card to the Vault.
      */
-    public function add (CreditCard $card, array $extraParams = []): Response
+    public function add(CreditCard $card, array $extraParams = []): Response
     {
         $params = array_merge($extraParams, [
             'type' => 'res_add_cc',
@@ -105,7 +105,7 @@ class Vault extends Gateway
     /**
      * Pre-authorize a purchase.
      */
-    public function preauth (array $params = []): Response
+    public function preauth(array $params = []): Response
     {
         $params = array_merge($params, [
             'type' => 'res_preauth_cc',
@@ -120,7 +120,7 @@ class Vault extends Gateway
     /**
      * Make a purchase.
      */
-    public function purchase (array $params = []): Response
+    public function purchase(array $params = []): Response
     {
         $params = array_merge($params, [
             'type' => 'res_purchase_cc',
@@ -162,12 +162,11 @@ class Vault extends Gateway
     /**
      * Update an existing credit card in the Vault.
      */
-    public function update (
+    public function update(
         CreditCard $card,
         string $key = '',
         array $extraParams = []
-    ): Response
-    {
+    ): Response {
         $params = array_merge($extraParams, [
             'type' => 'res_update_cc',
             'data_key' => $key,

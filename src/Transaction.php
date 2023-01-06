@@ -17,7 +17,8 @@ use SimpleXMLElement;
  */
 class Transaction
 {
-    use GettableTrait, SettableTrait;
+    use GettableTrait;
+    use SettableTrait;
 
     protected ErrorList $errors;
     protected SimpleXMLElement|null $response = null;
@@ -30,8 +31,7 @@ class Transaction
     public function __construct(
         protected GatewayInterface $gateway,
         array $params = []
-    )
-    {
+    ) {
         $this->params = $this->prepare($params);
         $this->errors = new ErrorList();
     }
@@ -40,7 +40,7 @@ class Transaction
      * Retrieve the amount for the transaction. The is only available on
      * certain transaction types.
      */
-    public function amount (): string|null
+    public function amount(): string|null
     {
         if (isset($this->params['amount'])) {
             return $this->params['amount'];
@@ -53,7 +53,7 @@ class Transaction
      * Check that the required parameters have not been provided to the
      * transaction.
      */
-    public function invalid (): bool
+    public function invalid(): bool
     {
         return !$this->valid();
     }
@@ -62,7 +62,7 @@ class Transaction
      * Retrieve the transaction number, assuming the transaction has been
      * processed.
      */
-    public function number (): string|null
+    public function number(): string|null
     {
         if (is_null($this->response)) {
             return null;
@@ -75,7 +75,7 @@ class Transaction
      * Retrieve the order id for the transaction. The is only available on
      * certain transaction types.
      */
-    public function order (): string|null
+    public function order(): string|null
     {
         return $this->params['order_id'] ?? null;
     }
@@ -83,7 +83,7 @@ class Transaction
     /**
      * Validate the result of the Moneris API call.
      */
-    public function validate (SimpleXMLElement $result): Response
+    public function validate(SimpleXMLElement $result): Response
     {
         $this->response = $result;
 
@@ -97,7 +97,7 @@ class Transaction
      * Check that the required parameters have been provided to the
      * transaction.
      */
-    public function valid (): bool
+    public function valid(): bool
     {
         $validator = new Validator($this->gateway, $this->params);
 
@@ -112,7 +112,7 @@ class Transaction
      * Convert the transaction parameters into an XML structure.
      * @codeCoverageIgnore
      */
-    public function toXml (): string|bool
+    public function toXml(): string|bool
     {
         $gateway = $this->gateway;
         $params = $this->params;
@@ -190,7 +190,7 @@ class Transaction
      * Append elements to the XML response.
      * @codeCoverageIgnore
      */
-    protected function append (array $params, SimpleXMLElement $type): void
+    protected function append(array $params, SimpleXMLElement $type): void
     {
         foreach ($params as $key => $value) {
             if (is_array($value)) {
@@ -229,7 +229,7 @@ class Transaction
      * Prepare the transaction parameters.
      * @codeCoverageIgnore
      */
-    protected function prepare (array $params): array
+    protected function prepare(array $params): array
     {
         foreach ($params as $key => $value) {
             if (is_string($value)) {

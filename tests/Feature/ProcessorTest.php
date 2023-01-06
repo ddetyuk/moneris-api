@@ -20,7 +20,7 @@ class ProcessorTest extends TestCase
     protected Transaction $transaction;
     protected array $params;
 
-    public function setUp (): void
+    public function setUp(): void
     {
         parent::setUp();
 

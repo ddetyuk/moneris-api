@@ -10,7 +10,7 @@ trait PreparableTrait
      * @param array $params
      * @return array
      */
-    protected function prepare ($data, array $params): array
+    protected function prepare($data, array $params): array
     {
         $array = [];
 
@@ -51,12 +51,20 @@ trait PreparableTrait
 
                             break;
                         case 'float':
-                            $array[$property] = isset($array[$property]) ? (is_string($array[$property]) ? floatval($array[$property]) : floatval($array[$property]->__toString())) : null;
-
+                            $array[$property] = isset($array[$property])
+                                ? (is_string($array[$property])
+                                    ? floatval($array[$property])
+                                    : floatval($array[$property]->__toString())
+                                )
+                                : null;
                             break;
                         case 'string':
-                            $array[$property] = isset($array[$property]) ? (is_string($array[$property]) ? $array[$property] : $array[$property]->__toString()) : null;
-
+                            $array[$property] = isset($array[$property])
+                                ? (is_string($array[$property])
+                                    ? $array[$property]
+                                    : $array[$property]->__toString()
+                                )
+                                : null;
                             break;
                         case 'array':
                             $array[$property] = (array)$array[$property];
